@@ -1,0 +1,24 @@
+.container {
+  overflow-y: auto;
+  padding-right: 20px;
+  border: transparent;
+}
+.container:focus {
+  border: transparent;
+  outline: transparent !important;
+}
+
+.container::-webkit-scrollbar {
+  z-index: 150;
+  width: 6px;
+  margin-right: 5px;
+  padding-right: 20px;
+}
+
+.container::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  z-index: 150;
+  background-color: #333333;
+  padding-right: 20px;
+  cursor: pointer;
+}
