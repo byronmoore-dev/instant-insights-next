@@ -39,8 +39,7 @@ export default async function ChatPage({ params }: ChatPageProps) {
   }
 
   return (
-    <div>
-      <p className="text-white">gm gm gm id: {params.id}</p>
+    <div className="mx-auto w-[90%] sm:w-[80%] pt-28 max-w-7xl">
       <ViewDisplay id={params.id} />
     </div>
   );

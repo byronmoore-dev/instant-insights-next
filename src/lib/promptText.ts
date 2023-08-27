@@ -1,7 +1,5 @@
-export const systemPrompt = `You are an expert in digital analytics. You will be sent data in table format. Additonally attached 
-  will be a summary of said content. You will respond with no words, only JSON. The JSON will have 4 
-  attributes. title: describing the data, insights: some text indicating three ideas from the data, 
-  and 2 visualizations: an array formatted for a pie chart of the data from one of your insights and another piechart. Always respond with the proper function. ALWAYS.`;
+export const systemPrompt = `
+You'll receive table data accompanied by a summary. Generate three unique insights about the data and three visualizations based on the insights. It's important that each insight is uniquely distinct if possible! Always utilize the designated function for generating the response.`;
 
 export const summarySample =
   "The submitted data is a table describing every video game i have ever played, starting as a kid until now. it has the name, the platform, and the release date of the game. additionally, there is a rating i gave them game, 1 to 5 means it is good, 6 to 8 means it is great, and 9 to 10 mean it's increidible.";
@@ -57,7 +55,7 @@ Donkey Kong Country Returns	4	Wii	2010
 Super Paper Mario	3	Wii	2007
 Mario Party 9	2	Wii	2012`;
 
-export const thuroughPrompt = `The provided data represents a collection of video games across various platforms including Gameboy Advance, PS2, DS, 3DS, Xbox 360, and Wii. The games encompass different genres such as Platformer, Racing, Shooter, Action/Adventure, Role-Playing, and Party. Each entry in the data set includes information about the game's title, rating (presumably on a scale of 1 to 9), platform, release year, and genre. The data spans a range of release years and features popular franchises like "Super Mario Bros," "Star Wars," "Halo," and "Call of Duty.`;
+`The provided data lists various video games spanning multiple gaming consoles, including the Gameboy Advance, PS2, DS, 3DS, Xbox 360, and Wii. Each game entry includes its title, a numerical value (possibly a rating or score), the gaming console it's associated with, and the year of release. Notably, franchises like "Star Wars", "Spongebob Squarepants", "Mario Kart", and "Call of Duty" appear across different platforms and years. The years of release range from 2001 to 2014, highlighting over a decade of gaming titles and their progression across these platforms.`;
 
 export const dataPrompt = `[
   {"title": "Super Mario Bros", "rating": 7, "platform": "Gameboy Advance", "year": 1999, "genre": "Platformer"},
@@ -112,7 +110,8 @@ export const dataPrompt = `[
 ]`;
 
 export const exampleResponse = {
-  title: "Distribution of Game Ratings",
+  title: "Aliens in Space",
+  subtitle: "A visual odyssey into the possibilities of extraterrestrial life: an in-depth exploration into aliens.",
   insights: [
     "Most games have ratings between 5 and 7.",
     "There are few games with ratings below 5.",

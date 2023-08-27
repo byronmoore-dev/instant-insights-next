@@ -2,8 +2,7 @@
 import React from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import SpiderChartComponent from "@/components/spiderChart";
-import PieChartComponent from "@/components/pieChart";
+import DisplayInsights from "@/components/displayInsights";
 
 export const dynamic = "force-dynamic";
 
@@ -19,30 +18,16 @@ const getView = async (id: string) => {
 };
 
 export default function ViewDisplay({ id }: { id: string }) {
-  const { data, status } = useQuery<any>({
+  const query = useQuery<any>({
     queryKey: ["get_view", id],
     queryFn: async () => await getView(id),
     onSuccess: (result: any) => {
       console.log("DATA: ", result);
     },
   });
+  const { status } = query;
 
-  if (status != "success") return <p>loading</p>;
+  if (status != "success") return <p className="text-5xl text-white">loading SLUTTT</p>;
 
-  return (
-    <div className="mx-auto w-[90%] sm:w-3/4 pt-28">
-      <h6 className="w-full text-xl font-bold text-white sm:text-2xl">Output</h6>
-
-      <h6 className="w-full text-xl font-bold text-white sm:text-2xl">{data?.title}</h6>
-      {data?.insights.map((item: string, index: number) => (
-        <h6 key={index} className="w-full text-xl font-bold text-white sm:text-2xl">
-          {item}
-        </h6>
-      ))}
-      <div className="flex w-full h-72 bg-gray-800">
-        {data ? <PieChartComponent data={data.viz1.data} /> : null}
-        {data ? <SpiderChartComponent data={data.viz2.data} /> : null}
-      </div>
-    </div>
-  );
+  return <DisplayInsights query={query} queryType="query" />;
 }

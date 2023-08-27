@@ -55,33 +55,39 @@ export interface Database {
           input_data: string | null
           input_data_type: string | null
           input_summary: string | null
-          insights: string | null
+          insights: string[] | null
+          subtitle: string | null
           title: string | null
           user_id: string | null
-          viz_1: Json | null
-          viz_2: Json | null
+          viz1: Json | null
+          viz2: Json | null
+          viz3: Json | null
         }
         Insert: {
           id?: string
           input_data?: string | null
           input_data_type?: string | null
           input_summary?: string | null
-          insights?: string | null
+          insights?: string[] | null
+          subtitle?: string | null
           title?: string | null
           user_id?: string | null
-          viz_1?: Json | null
-          viz_2?: Json | null
+          viz1?: Json | null
+          viz2?: Json | null
+          viz3?: Json | null
         }
         Update: {
           id?: string
           input_data?: string | null
           input_data_type?: string | null
           input_summary?: string | null
-          insights?: string | null
+          insights?: string[] | null
+          subtitle?: string | null
           title?: string | null
           user_id?: string | null
-          viz_1?: Json | null
-          viz_2?: Json | null
+          viz1?: Json | null
+          viz2?: Json | null
+          viz3?: Json | null
         }
         Relationships: [
           {

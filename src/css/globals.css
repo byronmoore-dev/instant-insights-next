@@ -40,3 +40,13 @@
     transform: translateY(0);
   }
 }
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none !important;
+  border: transparent !important;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}

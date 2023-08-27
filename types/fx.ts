@@ -1,5 +1,6 @@
 export type GenerateVizType = {
   title: string;
+  subtitle: string;
   insights: Array<string>;
   viz1: {
     vizType: string;
@@ -13,7 +14,15 @@ export type GenerateVizType = {
     data: Array<{
       label: string;
       value: number;
-      max: number
+      max: number;
+    }>;
+  };
+  viz3: {
+    vizType: string;
+    data: Array<{
+      label: string;
+      value: number;
+      max: number;
     }>;
   };
 };
