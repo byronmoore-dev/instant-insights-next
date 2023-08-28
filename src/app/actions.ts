@@ -1,7 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { Database } from "../../types/supabase";
@@ -10,7 +8,7 @@ import { PostgrestMaybeSingleResponse } from "@supabase/supabase-js";
 type ViewRow = Database["public"]["Tables"]["view"]["Row"];
 type MessageRow = Database["public"]["Tables"]["message"]["Row"];
 
-export async function getAllViews(): Promise<PostgrestMaybeSingleResponse<ViewRow[]> | []> {
+export async function getAllViews(): Promise<ViewRow[]> {
   const supabase = createServerActionClient({ cookies });
 
   const {
@@ -18,13 +16,12 @@ export async function getAllViews(): Promise<PostgrestMaybeSingleResponse<ViewRo
   } = await supabase.auth.getUser();
 
   try {
-    if (!user) throw new Error("");
+    if (!user) throw new Error("No valid user logged in");
 
-    const conversations: PostgrestMaybeSingleResponse<ViewRow[]> = await supabase.from("view").select("*").eq("user_id", user.id).single();
-
-    return conversations;
+    const views: PostgrestMaybeSingleResponse<ViewRow[]> = await supabase.from("view").select("*").eq("user_id", user.id);
+    return views?.data || [];
   } catch (error) {
-    return [];
+    throw error;
   }
 }
 

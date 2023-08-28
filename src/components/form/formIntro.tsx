@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 export default function FormIntro({ updateForm }: { updateForm: (arg0: any) => void }) {
   return (
     <AnimWrapper>
-      <h6 className="w-full text-xl font-bold text-white sm:text-2xl">Intro</h6>
+      <h6 className="w-full text-xl font-bold text-white sm:text-2xl">Let's get started</h6>
       <p className="text-white/80">Here is a bunch of copy text that is useless but temp</p>
     </AnimWrapper>
   );

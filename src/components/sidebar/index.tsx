@@ -1,34 +1,21 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Database } from "@/types/supabase";
+
 import Link from "next/link";
-import { removeView } from "@/app/actions";
-import { useState } from "react";
-import { AddIcon, DashboardIcon, SidebarIcon, ViewIcon } from "@/assets/icons";
+import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
+
+import { Database } from "@/types/supabase";
+import { AddIcon, DashboardIcon, SidebarIcon } from "@/assets/icons";
 import AuthDisplay from "./authDisplay";
+import useLocalStorage from "@/lib/useLocalStorage";
+import SidebarList from "./sidebarItems";
+import { getAllViews } from "@/app/actions";
 
 type ViewType = Database["public"]["Tables"]["view"]["Row"];
 
-const getAllViews = async () => {
-  try {
-    const supabase = createClientComponentClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) throw new Error("No valid user logged in");
-
-    let res = await supabase.from("view").select("*").eq("user_id", user.id);
-    return res?.data || [];
-  } catch (e) {
-    throw e;
-  }
-};
-
 function Sidebar() {
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useLocalStorage<boolean>("sidebarOpen", false);
+
   const { data, error, isLoading } = useQuery<ViewType[]>({
     queryKey: ["all-views"],
     queryFn: () => getAllViews(),
@@ -43,7 +30,7 @@ function Sidebar() {
       {open ? null : (
         <motion.button
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1, transition: { duration: 0, delay: 0.2 } }}
+          animate={{ opacity: 1, transition: { duration: 0, delay: 0 } }}
           exit={{ opacity: 0, transition: { duration: 0, delay: 0 } }}
           className="absolute left-6 top-6 rounded-md border-[1px] border-border bg-foreground px-4 py-4 text-white duration-200 hover:brightness-[110%]"
           onClick={() => setOpen(true)}
@@ -88,28 +75,7 @@ function Sidebar() {
               <div className="mb-6 mt-4 h-[1px] w-full rounded bg-border" />
 
               {/* Views */}
-              <h6 className="mb-1 text-sm font-semibold text-white/50">Views</h6>
-              {data.map((item: ViewType) => (
-                <button
-                  key={item.id}
-                  className="group relative flex w-full cursor-pointer items-center overflow-hidden rounded-md duration-75 hover:bg-foreground"
-                >
-                  <Link
-                    href={`/view/${item.id}`}
-                    className="group relative flex w-full items-center overflow-hidden whitespace-nowrap px-2 py-3 text-sm text-white"
-                  >
-                    <ViewIcon className="absolute left-2 top-1/2 -translate-y-1/2" />
-                    <p className="relative ml-5">{item?.title}</p>
-                    <span className="absolute right-0 top-0 h-full w-[25%] bg-gradient-to-r from-background/0 to-background group-hover:to-foreground" />
-                  </Link>
-                  <button
-                    className="text- pointer-events-auto absolute right-1 top-1/2 hidden -translate-y-1/2 rounded border-[1px] border-border bg-foreground px-2 text-white hover:brightness-125 group-hover:flex"
-                    onClick={() => removeView(item.id)}
-                  >
-                    x
-                  </button>
-                </button>
-              ))}
+              <SidebarList data={data} />
               <div className="mb-2 mt-auto h-[1px] w-full rounded bg-border" />
 
               {/* Auth */}

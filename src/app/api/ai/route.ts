@@ -32,7 +32,7 @@ export async function POST(req: Request, res: NextResponse) {
     return NextResponse.json({ error: "Data is invalid" }, { status: 400, statusText: "Data is invalid" });
   }
 
-  if (!summary) {
+  if (!summary || summary == "") {
     return NextResponse.json({ error: "Summary is invalid" }, { status: 400, statusText: "Summary is invalid" });
   }
 
@@ -71,7 +71,6 @@ export async function POST(req: Request, res: NextResponse) {
     let supabaseRes = await supabase.from("view").insert(sqlData);
     if (supabaseRes.status != 201) throw new Error("Error in supabase");
 
-    console.log("SQL Response", supabaseRes);
     return NextResponse.json({ data: resJson }, { status: 200 });
   } catch (error: any) {
     console.error(error);

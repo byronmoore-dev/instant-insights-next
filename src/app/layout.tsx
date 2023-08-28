@@ -26,9 +26,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${body.variable} ${header.variable} scroll-smooth`}>
       <body>
         <QueryProvider>
-          <main className="min-h-screen bg-background w-full flex flex-row items-center">
+          <main className="flex min-h-screen w-full flex-row items-center bg-background">
             <Sidebar />
-            <div className="w-full h-full">{children}</div>
+            <div className="h-full w-full">{children}</div>
           </main>
         </QueryProvider>
       </body>

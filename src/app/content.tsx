@@ -31,7 +31,7 @@ const getGPTData = async (form: FormProps): Promise<GenerateVizType> => {
     }
   } catch (e) {
     console.error(e);
-    throw new Error("Error in getGPTData: " + e);
+    throw e;
   }
 };
 
