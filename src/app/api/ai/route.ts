@@ -1,10 +1,8 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import { OpenAIStream, StreamingTextResponse } from "ai";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import { nanoid } from "@/lib/utils";
 
 import { Configuration, OpenAIApi } from "openai";
 import { systemPrompt } from "@/lib/promptText";

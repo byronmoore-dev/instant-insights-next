@@ -24,7 +24,7 @@ export default function GPTForm() {
   return (
     <div
       style={{ perspective: "1000px" }}
-      className="absolute z-20 top-0 left-0 w-full h-screen bg-white flex justify-center items-center flex-col overflow-hidden"
+      className="absolute left-0 top-0 z-20 flex h-screen w-full flex-col items-center justify-center bg-red-400"
     >
       <AnimatePresence>
         {fade && (
@@ -34,7 +34,7 @@ export default function GPTForm() {
             exit={{ transform: "translateZ(-100px)", opacity: 0 }}
             transition={{ duration: 0.3, delay: initialDelay }}
             style={{ willChange: "transform, opacity" }}
-            className="relative w-auto p-12 h-auto bg-neutral-100 rounded-md shadow-xl"
+            className="relative h-auto w-auto rounded-md bg-neutral-100 p-12 shadow-xl"
           >
             <h6 className="w-full text-xl font-bold text-neutral-800 sm:text-2xl">Output</h6>
             <h6 className="w-full text-lg font-medium text-neutral-600 sm:text-2xl">{data?.title}</h6>
@@ -47,7 +47,7 @@ export default function GPTForm() {
               initial={{ scale: 1.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.3, delay: initialDelay + 0.6 }}
-              className="flex w-full h-auto bg-white rounded-md"
+              className="flex h-auto w-full rounded-md bg-white"
             >
               {data ? <PieChartComponent data={data.viz1.data} /> : null}
               {data ? <SpiderChartComponent data={data.viz2.data} /> : null}
@@ -55,7 +55,7 @@ export default function GPTForm() {
           </motion.div>
         )}
       </AnimatePresence>
-      <button className="bg-black p-2 rounded absolute top-2 left-2" onClick={() => setFade(!fade)}>
+      <button className="absolute left-2 top-2 rounded bg-black p-2" onClick={() => setFade(!fade)}>
         FADE
       </button>
     </div>

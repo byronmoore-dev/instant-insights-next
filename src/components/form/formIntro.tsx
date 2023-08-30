@@ -1,20 +1,33 @@
 "use client";
 import React from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { UseMutationResult } from "@tanstack/react-query";
-import { GenerateVizType } from "@/types/fx";
-import classNames from "classnames";
-import styles from "@/css/scrollbar.module.css";
-import { FormProps } from "@/types/general";
 import AnimWrapper from "./animWrapper";
+import { FormSpan, FormText, FormTitle } from "./formType";
 
 export const dynamic = "force-dynamic";
 
-export default function FormIntro({ updateForm }: { updateForm: (arg0: any) => void }) {
+export default function FormIntro() {
   return (
     <AnimWrapper>
-      <h6 className="w-full text-xl font-bold text-white sm:text-2xl">Let's get started</h6>
-      <p className="text-white/80">Here is a bunch of copy text that is useless but temp</p>
+      <FormTitle>Let's get started</FormTitle>
+
+      <FormText>
+        Welcome to our state-of-the-art data analytics and visualization tool! Here's a brief overview of the steps you'll take to transform your raw
+        data into compelling insights:
+      </FormText>
+
+      <FormText>
+        <FormSpan>Data Upload: </FormSpan>Begin by selecting and uploading your dataset. We support multiple file formats for your convenience.
+      </FormText>
+
+      <FormText>
+        <FormSpan>Describe Your Data: </FormSpan>
+        Give your dataset a unique name and provide some context. This helps in understanding its significance and origin.
+      </FormText>
+
+      <FormText>
+        <FormSpan>Analysis Details: </FormSpan>
+        Share with us the specifics of your intended analysis. Whether you're looking for trends or comparisons, we've got you covered.
+      </FormText>
     </AnimWrapper>
   );
 }
