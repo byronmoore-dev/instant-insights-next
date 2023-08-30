@@ -24,9 +24,9 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${body.variable} ${header.variable} scroll-smooth`}>
-      <body>
+      <body className="bg-background">
         <QueryProvider>
-          <main className="flex min-h-screen w-full flex-row items-center bg-background">
+          <main className="flex min-h-screen w-full flex-row items-start bg-background">
             <Sidebar />
             <div className="h-full w-full">{children}</div>
           </main>

@@ -54,7 +54,7 @@ export default function MainPageContent() {
 
   if (stage === "input") {
     return (
-      <div className="mx-auto h-screen w-[90%] max-w-7xl overflow-hidden sm:w-[80%]">
+      <div className="mx-auto h-full w-[90%] max-w-7xl sm:w-[80%]">
         <DisplayForm mutation={qMutation} />;
       </div>
     );

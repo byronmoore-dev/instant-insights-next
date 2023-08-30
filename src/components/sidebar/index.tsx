@@ -32,19 +32,25 @@ function Sidebar() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, transition: { duration: 0, delay: 0 } }}
           exit={{ opacity: 0, transition: { duration: 0, delay: 0 } }}
-          className="absolute left-6 top-6 rounded-md border-[1px] border-border bg-foreground px-4 py-4 text-white duration-200 hover:brightness-[110%]"
+          className="fixed left-6 top-6 rounded-md border-[1px] border-border bg-foreground px-4 py-4 text-white duration-200 hover:brightness-[110%]"
           onClick={() => setOpen(true)}
         >
           <SidebarIcon />
         </motion.button>
       )}
+
+      {/* Relative layer */}
+      <AnimatePresence>
+        {open ? <motion.div initial={{ width: 0 }} animate={{ width: 350 }} exit={{ width: 0 }} className="h-20 w-[350px] overflow-hidden " /> : null}
+      </AnimatePresence>
+
       <AnimatePresence>
         {open ? (
           <motion.aside
             initial={{ width: 0 }}
-            animate={{ width: 350 }}
+            animate={{ width: 290 }}
             exit={{ width: 0 }}
-            className="h-screen overflow-hidden border-[1px] border-border bg-background"
+            className="fixed h-screen overflow-hidden border-[1px] border-border bg-background"
           >
             <section className="flex h-full w-[calc(350px-64px)] flex-col overflow-x-hidden p-7">
               {/* Upper Actions */}
