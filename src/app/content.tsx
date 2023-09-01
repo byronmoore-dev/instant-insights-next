@@ -19,7 +19,7 @@ const getGPTData = async (form: FormProps): Promise<GenerateVizType> => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ data: form.data, summary: form.summary }),
+      body: JSON.stringify({ textData: form.textData, summary: form.summary, purpose: form.purpose }),
     });
 
     if (res.ok) {
@@ -55,14 +55,13 @@ export default function MainPageContent() {
   if (stage === "input") {
     return (
       <div className="mx-auto h-full w-[90%] max-w-7xl sm:w-[80%]">
-        <DisplayForm mutation={qMutation} />;
+        <DisplayForm mutation={qMutation} />
       </div>
     );
   }
 
   return (
     <div className="mx-auto w-[90%] max-w-7xl pt-28 sm:w-[80%]">
-      <p className="text-white">{stage}</p>
       {stage == "output" && status == "success" ? <DisplayInsights query={qMutation} queryType="mutate" /> : null}
     </div>
   );

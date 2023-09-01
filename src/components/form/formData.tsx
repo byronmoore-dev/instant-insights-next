@@ -4,7 +4,7 @@ import classNames from "classnames";
 import styles from "@/css/scrollbar.module.css";
 import AnimWrapper from "./animWrapper";
 import { UploadIcon } from "@/assets/icons";
-import { FormSubheading, FormText, FormTitle } from "./formType";
+import { FormSubheading, FormText, FormTitle, TextArea } from "./formType";
 
 export const dynamic = "force-dynamic";
 
@@ -40,15 +40,21 @@ export default function FormData({ updateForm }: { updateForm: (arg0: any) => vo
       </FormText>
       <FormSubheading>File Upload</FormSubheading>
       <FormText>Drag and drop your file here or click to browse. We support CSV, Excel, Text, and JSON formats.</FormText>
-      <div className="relative mb-16 h-24 w-full select-none overflow-hidden rounded-xl border-[1.5px] border-border bg-foreground">
-        <div className="group absolute left-1/2 top-1/2 flex aspect-square h-full w-full -translate-x-1/2 -translate-y-1/2 transform items-center justify-center rounded-md bg-neutral-900/10 hover:bg-neutral-900/60">
+      <div className="border-border bg-foreground relative mb-10 h-24 w-full select-none overflow-hidden rounded-xl border-[1.5px]">
+        <div className="group absolute left-1/2 top-1/2 flex aspect-square h-full w-full -translate-x-1/2 -translate-y-1/2 transform items-center justify-center rounded-md bg-l-foreground duration-200 hover:brightness-110 dark:bg-d-foreground">
           <input
             type="file"
             onChange={(e) => uploadFile(e)}
             className="absolute left-0 right-0 h-full w-full cursor-pointer opacity-0 file:hidden file:text-transparent"
           />
-          <UploadIcon className="w-6 text-white opacity-0 group-hover:opacity-100" />
+          <UploadIcon className="w-6 stroke-l-text-main opacity-0 duration-200 group-hover:opacity-100 dark:stroke-d-text-main" />
         </div>
+      </div>
+
+      <div className="mx-auto mb-8 flex w-full max-w-sm items-center">
+        <div className="bg-border h-1 w-full rounded-lg bg-l-border/40 dark:bg-d-border" />
+        <p className="font-sm px-6 font-medium text-l-text-second dark:text-d-text-second">or</p>
+        <div className="bg-border h-1 w-full rounded-lg bg-l-border/40 dark:bg-d-border" />
       </div>
 
       <FormSubheading>Manual Input</FormSubheading>
@@ -57,22 +63,7 @@ export default function FormData({ updateForm }: { updateForm: (arg0: any) => vo
         results.
       </FormText>
       <FormText>Hint: For CSV data, ensure values are comma-separated. For JSON, ensure you have valid syntax.</FormText>
-      <div className="relative mb-4 mt-4 w-full overflow-hidden rounded-2xl border-[1.5px] border-border bg-foreground py-2 pr-2">
-        <textarea
-          rows={5}
-          required
-          name="data"
-          className={classNames(
-            styles.container,
-            "peer max-h-[200px] w-full resize-none rounded-2xl border-[1.5px] border-border bg-foreground px-6 pb-4 pt-4 text-sm text-black outline-none sm:text-base"
-          )}
-          onChange={updateForm}
-        ></textarea>
-
-        <label className="pointer-events-none absolute left-6 top-6 w-[90%] text-white/80 duration-200 peer-valid:top-2 peer-valid:pb-1 peer-valid:text-xs peer-focus:top-2 peer-focus:pb-1 peer-focus:text-xs">
-          Paste in your data...
-        </label>
-      </div>
+      <TextArea updateForm={updateForm} id="textData" label="Paste in your data..." />
     </AnimWrapper>
   );
 }

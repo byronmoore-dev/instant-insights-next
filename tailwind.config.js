@@ -3,6 +3,7 @@ const { fontFamily } = require("tailwindcss/defaultTheme");
 /** @type {import('tailwindcss').Config} */ // @ts-check
 module.exports = {
   content: ["./src/components/**/*.{js,ts,jsx,tsx}", "./src/app/**/*.{js,ts,jsx,tsx}"],
+  darkMode: "class",
   theme: {
     extend: {
       fontFamily: {
@@ -10,17 +11,29 @@ module.exports = {
         header: ["var(--font-header)", ...fontFamily.sans],
         body: ["var(--font-body)", ...fontFamily.sans],
       },
+
       colors: {
-        background: "#191A1F",
-        foreground: "#1F2026",
-        border: "#373737",
-        color: {
-          main: "#E4E4E4",
-          second: "#8D8D8D",
+        l: {
+          background: "#F5F5F5",
+          foreground: "#EEEEEE",
+          border: "#C1C1C1",
+          text: {
+            main: "#151515",
+            second: "#262626",
+          },
         },
-        btn: {
+        d: {
           background: "#191A1F",
-          "background-hover": "hsl(var(--btn-background-hover))",
+          foreground: "#1F2026",
+          border: "#373737",
+          text: {
+            main: "#F3F3F3",
+            second: "#9A9A9A",
+          },
+          btn: {
+            background: "#191A1F",
+            "background-hover": "hsl(var(--btn-background-hover))",
+          },
         },
       },
     },

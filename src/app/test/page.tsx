@@ -36,7 +36,6 @@ export default function GPTForm() {
             style={{ willChange: "transform, opacity" }}
             className="relative h-auto w-auto rounded-md bg-neutral-100 p-12 shadow-xl"
           >
-            <h6 className="w-full text-xl font-bold text-neutral-800 sm:text-2xl">Output</h6>
             <h6 className="w-full text-lg font-medium text-neutral-600 sm:text-2xl">{data?.title}</h6>
             {data?.insights.map((item: string, index: number) => (
               <h6 key={index} className="w-full text-lg text-neutral-600 sm:text-2xl">

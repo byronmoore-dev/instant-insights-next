@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import DisplayInsights from "@/components/displayInsights";
 
 export const dynamic = "force-dynamic";
@@ -27,7 +27,7 @@ export default function ViewDisplay({ id }: { id: string }) {
   });
   const { status } = query;
 
-  if (status != "success") return <p className="text-5xl text-white">loading SLUTTT</p>;
+  if (status != "success") return <p className="text-5xl text-white">loading</p>;
 
   return <DisplayInsights query={query} queryType="query" />;
 }

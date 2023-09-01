@@ -24,9 +24,9 @@ export async function POST(req: Request, res: NextResponse) {
 
   //To read request data
   const json = await req.json();
-  let { data, summary } = json;
+  let { textData, fileData, summary, purpose } = json;
 
-  if (!data) {
+  if (!textData && !fileData) {
     return NextResponse.json({ error: "Data is invalid" }, { status: 400, statusText: "Data is invalid" });
   }
 
@@ -35,7 +35,8 @@ export async function POST(req: Request, res: NextResponse) {
   }
 
   // Initial Message Prompt
-  let messages: any = getMessageFormat(summary, data);
+  let data = textData;
+  let messages: any = getMessageFormat(summary, purpose, data);
 
   try {
     const openai_res = await openai.createChatCompletion({
@@ -76,7 +77,7 @@ export async function POST(req: Request, res: NextResponse) {
   }
 }
 
-const getMessageFormat = (summary: string, data: string) => {
+const getMessageFormat = (summary: string, purpose: string, data: string) => {
   return [
     {
       role: "system",
@@ -85,6 +86,7 @@ const getMessageFormat = (summary: string, data: string) => {
     {
       role: "user",
       content: `SUMMARY: ${summary}
+                PURPOSE: ${purpose}
                 DATA: ${data}`,
     },
   ];

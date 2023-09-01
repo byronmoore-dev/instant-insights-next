@@ -10,6 +10,7 @@ type MessageRow = Database["public"]["Tables"]["message"]["Row"];
 
 export async function getAllViews(): Promise<ViewRow[]> {
   const supabase = createServerActionClient({ cookies });
+  console.log("Calling get all views here");
 
   const {
     data: { user },

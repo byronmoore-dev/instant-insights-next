@@ -9,8 +9,8 @@ export default function FormProgress({ stage }: { stage: FormStages }) {
   const currentIndex = steps.indexOf(stage);
 
   return (
-    <div className="relative mb-6 h-auto w-full">
-      <div className="relative h-48 w-full overflow-hidden rounded-md bg-black/30">
+    <div className="relative mb-10 h-auto w-full">
+      <div className="relative h-48 w-full overflow-hidden rounded-md">
         <Image
           src={"https://zuzana-eco-blog.s3.us-east-2.amazonaws.com/hero.jpg"}
           alt="lfg"

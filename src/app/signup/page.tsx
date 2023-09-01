@@ -24,7 +24,7 @@ export default function Login() {
         Back
       </Link>
 
-      <form className="text-foreground flex w-full flex-col justify-center space-y-6" action="/auth/sign-in" method="post">
+      <form className="text-foreground flex w-full flex-col justify-center space-y-6" action="/auth/sign-up" method="post">
         {/* Email Field */}
         <div className="flex flex-col space-y-2">
           <label className="text-lg font-semibold" htmlFor="email">
@@ -52,17 +52,31 @@ export default function Login() {
           />
         </div>
 
+        {/* Confirm Password Field */}
+        <div className="flex flex-col space-y-2">
+          <label className="text-lg font-semibold" htmlFor="confirmPassword">
+            Confirm Password
+          </label>
+          <input
+            className="rounded-lg border border-gray-300 bg-inherit px-4 py-2 transition duration-150 ease-in-out focus:border-green-500 focus:ring-1 focus:ring-green-500"
+            type="password"
+            name="confirmPassword"
+            placeholder="••••••••"
+            required
+          />
+        </div>
+
         {/* Sign In Button */}
         <button type="submit" className="rounded-lg bg-green-700 px-5 py-2 text-white transition duration-150 ease-in-out hover:bg-green-800">
-          Sign In
+          Sign Up
         </button>
 
         {/* Sign Up Button */}
         <Link
-          href="/signup"
+          href="/login"
           className="mt-4 rounded-lg border border-gray-700 px-5 py-2 text-white transition duration-150 ease-in-out hover:border-gray-800"
         >
-          Sign Up
+          Need to sign in?{" "}
         </Link>
 
         {/* Messages Component */}

@@ -1,21 +1,23 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { UseMutationResult, useQueryClient } from "@tanstack/react-query";
 import { GenerateVizType } from "@/types/fx";
 import { FormProps, FormStages } from "@/types/general";
 import FormData from "./formData";
 import FormIntro from "./formIntro";
-import FormSummary from "./formSummary";
 import FormSubmit from "./formSubmit";
 import FormProgress from "./formProgress";
-import { AnimatePresence, motion } from "framer-motion";
+import { FormNav } from "./formNav";
+import FormContext from "./formContext";
 
 export const dynamic = "force-dynamic";
 
 let initialForm = {
-  data: "",
+  textData: "",
+  fileData: null,
   summary: "",
+  purpose: "",
 };
 
 const FormRouter = ({ route, updateForm }: { route: FormStages; updateForm: (arg0: any) => void }) => {
@@ -24,10 +26,8 @@ const FormRouter = ({ route, updateForm }: { route: FormStages; updateForm: (arg
       return <FormIntro />;
     case FormStages.DATA:
       return <FormData updateForm={updateForm} />;
-    case FormStages.SUMMARY:
-      return <FormSummary updateForm={updateForm} />;
-    case FormStages.SUBMIT:
-      return <FormSubmit updateForm={updateForm} />;
+    case FormStages.CONTEXT:
+      return <FormContext updateForm={updateForm} />;
     default:
       return <p>uh oh oopsies</p>;
   }
@@ -43,7 +43,7 @@ export default function DisplayForm({ mutation }: { mutation: any }) {
   // State
   const [form, setForm] = useState<FormProps>(initialForm);
   const [currentStage, setCurrentStage] = useState<FormStages>(FormStages.INTRO);
-  const [showNav, setShowNav] = useState(true);
+  const [showNav, setShowNav] = useState<boolean>();
 
   const handleFormChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setForm((prevForm) => ({
@@ -55,7 +55,6 @@ export default function DisplayForm({ mutation }: { mutation: any }) {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      console.log("SUBMIT: ", form);
       let res = await mutateAsync(form);
       queryClient.invalidateQueries(["all-views"]);
 
@@ -71,55 +70,22 @@ export default function DisplayForm({ mutation }: { mutation: any }) {
     // Hide the FormNav
     setShowNav(false);
 
-    const stageIndex = Object.values(FormStages).indexOf(currentStage);
+    setTimeout(() => {
+      const stageIndex = Object.values(FormStages).indexOf(currentStage);
 
-    if (direction === "next" && stageIndex < Object.values(FormStages).length - 1) {
-      setCurrentStage(Object.values(FormStages)[stageIndex + 1]);
-    } else if (direction === "back" && stageIndex > 0) {
-      setCurrentStage(Object.values(FormStages)[stageIndex - 1]);
-    }
+      if (direction === "next" && stageIndex < Object.values(FormStages).length - 1) {
+        setCurrentStage(Object.values(FormStages)[stageIndex + 1]);
+      } else if (direction === "back" && stageIndex > 0) {
+        setCurrentStage(Object.values(FormStages)[stageIndex - 1]);
+      }
 
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
 
-    // Show the FormNav
-    setShowNav(true);
-  };
-
-  const FormNav = () => {
-    return (
-      <AnimatePresence>
-        {showNav && (
-          <motion.div
-            className="relative mt-6 h-10 w-full"
-            animate={{ opacity: 1 }} // Use the controls here
-            transition={{ duration: 0.2, delay: 0.4 }}
-            initial={{ opacity: 0 }}
-            exit={{ opacity: 0 }}
-          >
-            {currentStage == FormStages.INTRO ? null : (
-              <button
-                className="absolute bottom-0 left-0 rounded border-[1.5px] border-border px-4 py-2 text-white"
-                onClick={(e) => changeStage(e, "back")}
-              >
-                Back
-              </button>
-            )}
-            {currentStage == FormStages.SUBMIT ? (
-              <button className="absolute bottom-0 right-0 rounded bg-white px-4 py-2 text-black" type="submit">
-                Submit
-              </button>
-            ) : (
-              <button className="absolute bottom-0 right-0 rounded bg-white px-4 py-2 text-black" onClick={(e) => changeStage(e, "next")}>
-                Next
-              </button>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    );
+      setShowNav(true);
+    }, 300); // You can adjust the delay as needed
   };
 
   return (
@@ -127,10 +93,11 @@ export default function DisplayForm({ mutation }: { mutation: any }) {
       {/* Form Progress Nav */}
       <FormProgress stage={currentStage} />
       {error ? <p className="bg-red-500 text-white">{error.toString()}</p> : null}
+
       {/* Form Root */}
-      <form onSubmit={handleSubmit} className="relative mx-auto flex h-auto w-full max-w-2xl flex-col items-end pb-12">
+      <form onSubmit={handleSubmit} className="relative mx-auto flex h-auto w-full max-w-2xl flex-col items-end pb-20">
         <FormRouter route={currentStage} updateForm={handleFormChange} />
-        <FormNav />
+        <FormNav showNav={showNav == undefined ? true : showNav} currentStage={currentStage} changeStage={changeStage} />
       </form>
     </section>
   );
