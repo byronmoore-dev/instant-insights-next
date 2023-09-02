@@ -18,7 +18,7 @@ const logout = async () => {
   }
 };
 
-export default function LogoutButton() {
+export default function SignoutButton() {
   return (
     <button onClick={() => logout()} className="w-full rounded-md bg-gray-700 py-2 text-white">
       Logout

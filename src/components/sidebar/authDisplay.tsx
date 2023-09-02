@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import LogoutButton from "@/components/logoutButton";
+import SignoutButton from "@/components/signoutButton";
 export const dynamic = "force-dynamic";
 
 export default function AuthDisplay() {
@@ -23,7 +23,7 @@ export default function AuthDisplay() {
   return (
     <nav className="relative">
       {state ? (
-        <LogoutButton />
+        <SignoutButton />
       ) : (
         <Link href="/login" className="rounded-md bg-gray-700 px-6 py-2 text-white">
           Login
