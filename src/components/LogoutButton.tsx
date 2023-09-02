@@ -1,7 +1,27 @@
+const logout = async () => {
+  try {
+    const res = await fetch("/auth/sign-out", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (res.ok) {
+      console.log("logged out");
+    } else {
+      throw new Error(res.statusText);
+    }
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
 export default function LogoutButton() {
   return (
-    <form action="/auth/sign-out" method="post">
-      <button className="bg-gray-700 w-full py-2 rounded-md text-white">Logout</button>
-    </form>
+    <button onClick={() => logout()} className="w-full rounded-md bg-gray-700 py-2 text-white">
+      Logout
+    </button>
   );
 }
