@@ -1,5 +1,4 @@
-export const systemPrompt = `
-You'll receive table data accompanied by a summary. Generate three unique insights about the data and three visualizations based on the insights. It's important that each insight is uniquely distinct if possible! Always utilize the designated function for generating the response.`;
+export const systemPrompt = `You are an expert data analyst. You will analyze your received data for interesting insights, topics, and hidden themes. Think of yourself as a data detective. Each insight you return, we will also need to create a chart or visual for it later, so make sure it can be visualized.`;
 
 export const summarySample =
   "The submitted data is a table describing every video game i have ever played, starting as a kid until now. it has the name, the platform, and the release date of the game. additionally, there is a rating i gave them game, 1 to 5 means it is good, 6 to 8 means it is great, and 9 to 10 mean it's increidible.";
@@ -55,7 +54,7 @@ Donkey Kong Country Returns	4	Wii	2010
 Super Paper Mario	3	Wii	2007
 Mario Party 9	2	Wii	2012`;
 
-`The provided data lists various video games spanning multiple gaming consoles, including the Gameboy Advance, PS2, DS, 3DS, Xbox 360, and Wii. Each game entry includes its title, a numerical value (possibly a rating or score), the gaming console it's associated with, and the year of release. Notably, franchises like "Star Wars", "Spongebob Squarepants", "Mario Kart", and "Call of Duty" appear across different platforms and years. The years of release range from 2001 to 2014, highlighting over a decade of gaming titles and their progression across these platforms.`;
+export const summaryPrompt = `The provided data lists various video games spanning multiple gaming consoles, including the Gameboy Advance, PS2, DS, 3DS, Xbox 360, and Wii. Each game entry includes its title, a numerical value (possibly a rating or score), the gaming console it's associated with, and the year of release. Notably, franchises like "Star Wars", "Spongebob Squarepants", "Mario Kart", and "Call of Duty" appear across different platforms and years. The years of release range from 2001 to 2014, highlighting over a decade of gaming titles and their progression across these platforms.`;
 
 export const dataPrompt = `[
   {"title": "Super Mario Bros", "rating": 7, "platform": "Gameboy Advance", "year": 1999, "genre": "Platformer"},

@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import LogoutButton from "../logoutButton";
 import Link from "next/link";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
-
 export const dynamic = "force-dynamic";
 
 export default function AuthDisplay() {
