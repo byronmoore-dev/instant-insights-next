@@ -36,21 +36,21 @@ export async function POST(req: Request, res: NextResponse) {
 
   // Initial Message Prompt
   let data = textData;
-  let getInsightsMessages: any = getVizMessageFormat(summary, purpose, data);
+  let getVizMessages: any = getVizMessageFormat(summary, purpose, data);
 
   try {
-    // Get insights
-    const openai_res_insights = await openai.createChatCompletion({
+    // Get one viz data
+    const openai_res2 = await openai.createChatCompletion({
       model: "gpt-3.5-turbo-16k",
       temperature: 0.8,
       stream: false,
-      messages: getInsightsMessages,
-      functions: functionInsight,
+      messages: getVizMessages,
+      functions: functionViz,
       function_call: "auto",
     });
-    let openai_last_message = openai_res_insights?.data["choices"][0]["message"];
-    if (!openai_last_message?.function_call?.arguments) throw new Error("No content from openai");
-    const resJson: GenerateVizType = JSON.parse(openai_last_message.function_call.arguments);
+    let openai_last_message2 = openai_res2?.data["choices"][0]["message"];
+    if (!openai_last_message2?.function_call?.arguments) throw new Error("No content from openai");
+    const resJson: GenerateVizType = JSON.parse(openai_last_message2.function_call.arguments);
 
     return NextResponse.json({ data: resJson }, { status: 200 });
   } catch (error: any) {
@@ -74,20 +74,16 @@ const getVizMessageFormat = (summary: string, purpose: string, data: string) => 
   ];
 };
 
-let functionInsight = [
+let functionViz = [
   {
-    name: "getInsights",
-    description: "I need a list of interesting insights and ideas from this data.",
+    name: "getViz",
+    description: "I need a potential",
     parameters: {
       type: "object",
       properties: {
         title: {
           type: "string",
-          description: "3 to 6 word title about the data. No punctuation.",
-        },
-        subtitle: {
-          type: "string",
-          description: "This is a 1 sentence subtitle supporting your title and describing the overall data. Use proper punctuation.",
+          description: "3 to 6 word title for the visualization. No punctuation.",
         },
         insights: {
           type: "array",

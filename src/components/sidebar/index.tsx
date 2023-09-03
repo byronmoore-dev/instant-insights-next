@@ -14,6 +14,7 @@ import ThemeSwitch from "../themeSwitch";
 import { usePathname } from "next/navigation";
 
 type ViewType = Database["public"]["Tables"]["view"]["Row"];
+const excludedPaths = ["/login", "/signup", "/reset", "/dashboard", "/profile"];
 
 function Sidebar() {
   const path = usePathname();
@@ -22,7 +23,8 @@ function Sidebar() {
   const { data, error, isLoading } = useQuery<ViewType[]>({
     queryKey: ["all-views"],
     queryFn: () => getAllViews(),
-    enabled: !path.includes("/login") && !path.includes("signup"),
+    refetchOnWindowFocus: false,
+    enabled: !excludedPaths.some((excludedPath) => path.includes(excludedPath)),
   });
 
   if (isLoading) return null;
