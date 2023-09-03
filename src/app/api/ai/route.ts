@@ -45,9 +45,10 @@ export async function POST(req: Request, res: NextResponse) {
       stream: false,
       messages,
       functions: functions,
-      function_call: "auto",
+      function_call: { name: "generateViz" },
     });
 
+    console.log("Tokens Used", openai_res?.data?.usage?.total_tokens);
     let openai_last_message = openai_res?.data["choices"][0]["message"];
 
     if (!openai_last_message?.function_call?.arguments) throw new Error("No content from openai");
@@ -103,19 +104,6 @@ const timeMyFx = () => {
 };
 
 let functions = [
-  {
-    name: "nvm",
-    description: "do not use",
-    parameters: {
-      type: "object",
-      properties: {
-        title: {
-          type: "string",
-          description: "3 to 6 word title about the data. No punctuation.",
-        },
-      },
-    },
-  },
   {
     name: "generateViz",
     description: "generate 3 distinct insights from this data",
