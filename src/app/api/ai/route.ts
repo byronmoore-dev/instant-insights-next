@@ -17,7 +17,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 export async function POST(req: Request, res: NextResponse) {
-  console.log("RUNNING...");
+  console.log("--- getAI()");
 
   // Init supabase
   const supabase = createRouteHandlerClient({ cookies });
