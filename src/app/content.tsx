@@ -1,20 +1,19 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { GenerateVizType } from "@/types/fx";
-import DisplayInsights from "../components/displayInsights";
+import DisplayInsights from "../components/display/displayInsights";
 import DisplayForm from "../components/form";
 import { FormProps } from "@/types/general";
-import { exampleResponse } from "@/lib/promptText";
 import useAuthCheck from "@/components/authCheck";
+import { useRouter } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-const getGPTData = async (form: FormProps): Promise<GenerateVizType> => {
-  // if (true) return exampleResponse;
+const getGPTData = async (form: FormProps): Promise<string> => {
   try {
-    const res = await fetch("/api/ai", {
+    const res = await fetch("/api/createInsights", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -24,7 +23,6 @@ const getGPTData = async (form: FormProps): Promise<GenerateVizType> => {
 
     if (res.ok) {
       const resJson = await res.json(); // Get the JSON data from the response
-      console.log("DATA: ", resJson?.data);
       return resJson.data;
     } else {
       throw new Error(res.statusText);
@@ -36,33 +34,33 @@ const getGPTData = async (form: FormProps): Promise<GenerateVizType> => {
 };
 
 export default function MainPageContent() {
-  const [stage, setStage] = useState<"input" | "output">("input");
+  const [submitted, setSubmitted] = useState<boolean>(false);
+  const router = useRouter();
+  const queryClient = useQueryClient();
   useAuthCheck();
 
-  const qMutation = useMutation<GenerateVizType>({
+  const qMutation = useMutation<string>({
     mutationFn: async (form: any) => await getGPTData(form),
-    onSuccess: () => {
-      setStage("output");
+    onSuccess: (viewId: string) => {
+      setSubmitted(true);
+      queryClient.invalidateQueries(["all-views"]);
+      router.push(`/view/${viewId}`);
     },
   });
 
   const { status } = qMutation;
 
-  if (status === "loading") {
-    return <p className="relative text-2xl text-white">LOADING!</p>;
-  }
-
-  if (stage === "input") {
+  if (status === "loading" || submitted) {
     return (
       <div className="mx-auto h-full w-[90%] max-w-7xl sm:w-[80%]">
-        <DisplayForm mutation={qMutation} />
+        <p className="relative text-2xl text-white">LOADING!</p>;
       </div>
     );
   }
 
   return (
-    <div className="mx-auto w-[90%] max-w-7xl pt-28 sm:w-[80%]">
-      {stage == "output" && status == "success" ? <DisplayInsights query={qMutation} queryType="mutate" /> : null}
+    <div className="mx-auto h-full w-[90%] max-w-7xl sm:w-[80%]">
+      <DisplayForm mutation={qMutation} />
     </div>
   );
 }

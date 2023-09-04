@@ -9,7 +9,6 @@ type FormNavProps = {
 };
 
 export const FormNav = ({ showNav, currentStage, changeStage }: FormNavProps) => {
-  console.log("child nav: ", showNav);
   return (
     <div className="relative mt-4 h-12 w-full">
       <AnimatePresence>

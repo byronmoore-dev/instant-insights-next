@@ -2,7 +2,7 @@
 import React from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useQuery } from "@tanstack/react-query";
-import DisplayInsights from "@/components/displayInsights";
+import DisplayInsights from "@/components/display/displayInsights";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +22,7 @@ export default function ViewDisplay({ id }: { id: string }) {
     queryKey: ["get_view", id],
     queryFn: async () => await getView(id),
     onSuccess: (result: any) => {
-      console.log("DATA: ", result);
+      console.log("Query Result: ", result);
     },
   });
   const { status } = query;

@@ -13,18 +13,18 @@ export const getInsightsGPTFunction = [
         },
         subtitle: {
           type: "string",
-          description: "This is a 1 sentence subtitle supporting your title and describing the overall data. Use proper punctuation.",
+          description: "2 SENTENCE SUBTITLE, PROPER PUNCTUATION. Create a subtitle supporting your title and describing the overall data.",
         },
         insights: {
           type: "array",
-          description: "4 to 10 items that are completely distinct and should stand alone independently.",
+          description: "AT LEAST 6 to 10 ITEMS. Each must be completely unique and should stand alone independently.",
           items: {
             type: "object",
-            description: "1 proper sentence of a unique takeaway or insight from the data that could potentially be visualized.",
+            description: "A unique takeaway or insight from the data that could be visualized.",
             properties: {
               insight: {
                 type: "string",
-                description: "1 proper sentence of a unique takeaway or insight from the data that could potentially be visualized.",
+                description: "2 proper sentences. A unique takeaway or insight from the data that could potentially be visualized.",
               },
               chartType: {
                 type: "string",

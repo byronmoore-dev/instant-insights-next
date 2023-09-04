@@ -10,6 +10,7 @@ import FormSubmit from "./formSubmit";
 import FormProgress from "./formProgress";
 import { FormNav } from "./formNav";
 import FormContext from "./formContext";
+import { redirect, useRouter } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +38,7 @@ export default function DisplayForm({ mutation }: { mutation: any }) {
   // OOF TS Shit
   const typedQuery: UseMutationResult<GenerateVizType> = mutation;
   const { data, mutateAsync, error } = typedQuery;
+  const router = useRouter();
 
   const queryClient = useQueryClient();
 
@@ -55,10 +57,7 @@ export default function DisplayForm({ mutation }: { mutation: any }) {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      let res = await mutateAsync(form);
-      queryClient.invalidateQueries(["all-views"]);
-
-      console.log("res: ", res);
+      await mutateAsync(form);
     } catch (e) {
       console.error(e);
     }

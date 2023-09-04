@@ -34,12 +34,11 @@ export default async function ChatPage({ params }: ChatPageProps) {
   const chat = await getView(params.id);
 
   if (!chat) {
-    console.log("sad day, no chat");
-    return <p>loading mfer</p>;
+    return <p>loading ????? idk</p>;
   }
 
   return (
-    <div className="mx-auto w-[90%] sm:w-[80%] pt-28 max-w-7xl">
+    <div className="mx-auto w-[90%] max-w-7xl pt-28 sm:w-[80%]">
       <ViewDisplay id={params.id} />
     </div>
   );

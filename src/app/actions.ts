@@ -10,7 +10,6 @@ type MessageRow = Database["public"]["Tables"]["message"]["Row"];
 
 export async function getAllViews(): Promise<ViewRow[]> {
   const supabase = createServerActionClient({ cookies });
-  console.log("Calling get all views here");
 
   const {
     data: { user },
@@ -21,6 +20,23 @@ export async function getAllViews(): Promise<ViewRow[]> {
 
     const views: PostgrestMaybeSingleResponse<ViewRow[]> = await supabase.from("view").select("*").eq("user_id", user.id);
     return views?.data || [];
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getViewInsights(viewID: string): Promise<any[]> {
+  const supabase = createServerActionClient({ cookies });
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  try {
+    if (!user) throw new Error("No valid user logged in");
+
+    const insights: PostgrestMaybeSingleResponse<any[]> = await supabase.from("insights").select("*").eq("view_id", viewID);
+    return insights?.data || [];
   } catch (error) {
     throw error;
   }
@@ -70,15 +86,9 @@ export async function removeView(id: string) {
 
   try {
     if (!user) throw new Error("");
-    let res1 = await supabase.from("view").select("*").eq("id", id).eq("user_id", user.id);
-    console.log("1", res1);
     const response = await supabase.from("view").delete().eq("id", id).eq("user_id", user.id);
-    console.log("RES: ", response);
-
-    let res2 = await supabase.from("view").select("*").eq("id", id).eq("user_id", user.id);
-    console.log("2:", res2);
     return response;
   } catch (e) {
-    console.log("error: ", e);
+    console.error(e);
   }
 }
