@@ -54,6 +54,7 @@ export interface Database {
           id: string
           input_data: string | null
           input_data_type: string | null
+          input_purpose: string | null
           input_summary: string | null
           insights: string[] | null
           subtitle: string | null
@@ -67,6 +68,7 @@ export interface Database {
           id?: string
           input_data?: string | null
           input_data_type?: string | null
+          input_purpose?: string | null
           input_summary?: string | null
           insights?: string[] | null
           subtitle?: string | null
@@ -80,6 +82,7 @@ export interface Database {
           id?: string
           input_data?: string | null
           input_data_type?: string | null
+          input_purpose?: string | null
           input_summary?: string | null
           insights?: string[] | null
           subtitle?: string | null
