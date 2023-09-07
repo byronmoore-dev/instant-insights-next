@@ -1,14 +1,13 @@
 "use client";
 import React, { useState } from "react";
-import classNames from "classnames";
-import styles from "@/css/scrollbar.module.css";
 import AnimWrapper from "./animWrapper";
-import { UploadIcon } from "@/assets/icons";
+import { UploadIcon } from "@/lib/assets/icons";
 import { FormSubheading, FormText, FormTitle, TextArea } from "./formType";
+import { FormProps } from "@/types/form";
 
 export const dynamic = "force-dynamic";
 
-export default function FormData({ updateForm }: { updateForm: (arg0: any) => void }) {
+export default function FormData({ updateForm, form }: { updateForm: (arg0: any) => void; form: FormProps }) {
   const uploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
       const file = e.target.files?.[0];
@@ -63,7 +62,7 @@ export default function FormData({ updateForm }: { updateForm: (arg0: any) => vo
         results.
       </FormText>
       <FormText>Hint: For CSV data, ensure values are comma-separated. For JSON, ensure you have valid syntax.</FormText>
-      <TextArea updateForm={updateForm} id="textData" label="Paste in your data..." />
+      <TextArea updateForm={updateForm} value={form.textData} id="textData" label="Paste in your data..." />
     </AnimWrapper>
   );
 }

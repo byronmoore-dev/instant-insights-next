@@ -5,10 +5,9 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai";
-import { CreateInsightsOpenAiProps, GenerateVizType } from "@/types/fx";
+import { CreateInsightsOpenAiProps } from "@/types/general";
 import { getInsightsGPTFunction, getInsightsSysPrompt } from "./gptContstants";
 import { uploadStringToS3 } from "./uploadS3";
-import { redirect } from "next/navigation";
 
 // export const runtime = "edge";
 
@@ -78,8 +77,9 @@ async function fetchChatCompletionFromOpenAI({
     throw new Error("No content from openai");
   }
 
-  const openAiFormattedResponse: CreateInsightsOpenAiProps = JSON.parse(openAiLastMessage.function_call.arguments);
-
+  const openAiFormattedResponse: CreateInsightsOpenAiProps = JSON.parse(openAiLastMessage.function_call.arguments) as CreateInsightsOpenAiProps;
+  console.log("RES: ", openAiFormattedResponse);
+  console.log("RES: ", tokensUsed);
   return { tokensUsed, openAiResponse: openAiFormattedResponse };
 }
 

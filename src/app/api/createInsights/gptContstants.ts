@@ -1,4 +1,4 @@
-const chartTypes = ["lineChart", "pieChart", "doughtnutChart", "radarChart", "barChart"];
+import { GPTChartTypes } from "@/types/general";
 
 export const getInsightsGPTFunction = [
   {
@@ -15,6 +15,24 @@ export const getInsightsGPTFunction = [
           type: "string",
           description: "2 SENTENCE SUBTITLE, PROPER PUNCTUATION. Create a subtitle supporting your title and describing the overall data.",
         },
+        stats: {
+          type: "array",
+          description: "Please provide 4 to 6 key statistics to summarize this dataset.",
+          items: {
+            type: "object",
+            description: "4 to 6 items.",
+            properties: {
+              label: {
+                type: "string",
+                description: "2 to 3 word label. MAX 3 words.",
+              },
+              value: {
+                type: "number" || "string",
+                description: "The statistic you have chosen to display.",
+              },
+            },
+          },
+        },
         insights: {
           type: "array",
           description: "AT LEAST 6 to 10 ITEMS. Each must be completely unique and should stand alone independently.",
@@ -24,12 +42,12 @@ export const getInsightsGPTFunction = [
             properties: {
               insight: {
                 type: "string",
-                description: "2 proper sentences. A unique takeaway or insight from the data that could potentially be visualized.",
+                description: "2 proper sentences. A unique takeaway or insight from the data that could be visualized.",
               },
               chartType: {
                 type: "string",
-                enum: chartTypes,
-                description: "What type of chart would you use to visualize the insight?",
+                enum: GPTChartTypes,
+                description: "What type of chart would you use to visualize the insight? Try to have a diverse set of chart types if it makes sense.",
               },
             },
           },

@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
@@ -11,7 +12,7 @@ export default function GPTForm() {
   const [initialDelay, setInitialDelay] = useState<number>(0.5);
 
   const { data, status } = useQuery<any>({
-    queryKey: ["get_view"],
+    queryKey: ["get-view"],
     queryFn: async () => await getView(),
   });
 

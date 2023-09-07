@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import SignoutButton from "@/components/signoutButton";
+import SignoutButton from "@/components/sidebar/signoutButton";
 export const dynamic = "force-dynamic";
 
 export default function AuthDisplay() {

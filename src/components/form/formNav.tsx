@@ -1,5 +1,5 @@
 import React from "react";
-import { FormStages } from "@/types/general";
+import { FormStages } from "@/types/form";
 import { AnimatePresence, motion } from "framer-motion";
 
 type FormNavProps = {

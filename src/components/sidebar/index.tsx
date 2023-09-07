@@ -5,9 +5,9 @@ import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { Database } from "@/types/supabase";
-import { AddIcon, DashboardIcon, SidebarIcon } from "@/assets/icons";
+import { AddIcon, DashboardIcon, SidebarIcon } from "@/lib/assets/icons";
 import AuthDisplay from "./authDisplay";
-import useLocalStorage from "@/lib/useLocalStorage";
+import useLocalStorage from "@/lib/hooks/useLocalStorage";
 import SidebarList from "./sidebarItems";
 import { getAllViews } from "@/app/actions";
 import ThemeSwitch from "../themeSwitch";
@@ -67,9 +67,9 @@ function Sidebar() {
             exit={{ width: 0 }}
             className="fixed z-30 h-screen overflow-hidden border-[1px] border-l-border bg-l-background dark:border-d-border dark:bg-d-background"
           >
-            <section className="flex h-full w-[calc(350px-64px)] flex-col overflow-x-hidden p-7">
+            <section className="flex h-full w-[calc(350px-64px)] flex-col overflow-x-hidden p-6">
               {/* Upper Actions */}
-              <div className="mb-20 flex flex-row">
+              <div className="mb-16 flex flex-row">
                 <Link
                   href={`/`}
                   className=" flex w-full flex-row items-center rounded border-[1px] border-l-border pl-3 text-base font-medium text-l-text-main duration-200 hover:bg-l-foreground dark:border-d-border dark:text-d-text-main hover:dark:bg-d-foreground"
@@ -85,6 +85,7 @@ function Sidebar() {
               </div>
 
               {/* Dashboard */}
+              {/* 
               <Link
                 href={`/`}
                 className="hover:bg-foreground text-l-main dark:text-d-main group relative flex w-full items-center overflow-hidden rounded-md px-2 py-3 duration-75"
@@ -92,8 +93,8 @@ function Sidebar() {
                 <DashboardIcon className="mr-2 stroke-l-text-main dark:stroke-d-text-main" />
                 Dashboard
               </Link>
-
-              <div className="bg-border mb-6 mt-4 h-[1px] w-full rounded" />
+              <div className="mb-6 mt-4 h-[1px] w-full rounded bg-l-border dark:bg-d-border" />
+              */}
 
               {/* Views */}
               <SidebarList data={data} />
