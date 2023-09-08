@@ -1,34 +1,73 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AnimWrapper from "./animWrapper";
 import { UploadIcon } from "@/lib/assets/icons";
 import { FormSubheading, FormText, FormTitle, TextArea } from "./formType";
 import { FormProps } from "@/types/form";
+import { useCustomSnackbar } from "@/lib/hooks/useSnackbar";
 
 export const dynamic = "force-dynamic";
 
-export default function FormData({ updateForm, form }: { updateForm: (arg0: any) => void; form: FormProps }) {
+export default function FormData({
+  updateForm,
+  updateData,
+  form,
+}: {
+  updateForm: (arg0: any) => void;
+  updateData?: (arg0: any) => void;
+  form: FormProps;
+}) {
+  if (!updateData) return;
+  const { toast } = useCustomSnackbar();
+  const [activeToastId, setActiveToastId] = useState<string | number | null>(null);
+
   const uploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
       const file = e.target.files?.[0];
       if (!file) return;
 
-      const buffer = await new Promise<Buffer>((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const arrayBuffer = reader.result as ArrayBuffer;
-          const buffer = Buffer.from(arrayBuffer);
-          resolve(buffer);
-        };
-        reader.readAsArrayBuffer(file);
-      });
-      console.log("FILE: ", buffer);
+      const reader = new FileReader();
+      reader.onload = () => {
+        updateData({
+          name: file.name,
+          type: file.type,
+          data: reader.result as string,
+        });
+      };
+      reader.readAsDataURL(file);
 
-      // Do something with the buffer
+      toast.success("GG", {
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      });
     } catch (e) {
-      console.log(e);
+      console.error(e);
+      toast.error("Error", {
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
     }
   };
+
+  const handleDeleteFile = () => {
+    updateData(undefined);
+  };
+
+  useEffect(() => {
+    if (form.textData && form.fileData) {
+      if (activeToastId) return;
+
+      const toastId = toast.warning("Choose either a file upload or manual data entry, not both.", {
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+        onClose: () => setActiveToastId(null),
+      });
+      setActiveToastId(toastId);
+    }
+  }, [form]);
 
   return (
     <AnimWrapper>
@@ -39,14 +78,32 @@ export default function FormData({ updateForm, form }: { updateForm: (arg0: any)
       </FormText>
       <FormSubheading>File Upload</FormSubheading>
       <FormText>Drag and drop your file here or click to browse. We support CSV, Excel, Text, and JSON formats.</FormText>
-      <div className="border-border bg-foreground relative mb-10 h-24 w-full select-none overflow-hidden rounded-xl border-[1.5px]">
+      <div className="border-border bg-foreground relative mb-16 h-24 w-full select-none overflow-hidden rounded-xl border-[1.5px]">
         <div className="group absolute left-1/2 top-1/2 flex aspect-square h-full w-full -translate-x-1/2 -translate-y-1/2 transform items-center justify-center rounded-md bg-l-foreground duration-200 hover:brightness-110 dark:bg-d-foreground">
           <input
             type="file"
+            accept=".txt, .csv, .xlsx, .json"
             onChange={(e) => uploadFile(e)}
             className="absolute left-0 right-0 h-full w-full cursor-pointer opacity-0 file:hidden file:text-transparent"
           />
-          <UploadIcon className="w-6 stroke-l-text-main opacity-0 duration-200 group-hover:opacity-100 dark:stroke-d-text-main" />
+
+          {/* Conditionally render based on whether a file is present */}
+          {form.fileData ? (
+            <div className="flex h-full w-full items-center justify-center">
+              <span className="mr-2">{form.fileData?.name}</span>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteFile();
+                }}
+                className="z-10 text-red-500 hover:text-red-600"
+              >
+                Delete
+              </button>
+            </div>
+          ) : (
+            <UploadIcon className="w-6 stroke-l-text-main opacity-60 duration-200 group-hover:opacity-100 dark:stroke-d-text-main" />
+          )}
         </div>
       </div>
 

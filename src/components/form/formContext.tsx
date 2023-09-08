@@ -14,10 +14,11 @@ export default function FormContext({ updateForm, form }: { updateForm: (arg0: a
         deliver better results.
       </FormText>
 
+      <div className="mb-4 h-[1px] w-full" />
       <FormSubheading>Tell Us About Your Data</FormSubheading>
       <FormText>Offer a brief overview of your dataset. This might include its origin, significance, or any peculiarities that stand out.</FormText>
       <TextArea updateForm={updateForm} value={form.summary} id="summary" label="What's unique or notable about this data?" />
-
+      <div className="mb-8 h-[1px] w-full" />
       <FormSubheading>What Insights Are You Seeking?</FormSubheading>
       <FormText>
         Describe what you hope to uncover or understand from this dataset. This will guide the analytical process and ensure the visualizations align

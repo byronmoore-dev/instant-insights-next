@@ -1,6 +1,10 @@
 export type FormProps = {
   textData: string;
-  fileData?: any;
+  fileData?: {
+    name: string;
+    type: string;
+    data: string;
+  } | null;
   summary: string;
   purpose: string;
 };

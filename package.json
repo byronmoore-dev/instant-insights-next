@@ -28,6 +28,7 @@
     "postcss": "8.4.24",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-toastify": "^9.1.3",
     "recharts": "^2.7.3",
     "supabase": "^1.88.0",
     "tailwind-merge": "^1.14.0",

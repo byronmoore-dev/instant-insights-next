@@ -9,6 +9,7 @@ import FormProgress from "./formProgress";
 import { FormNav } from "./formNav";
 import FormContext from "./formContext";
 import { useRouter } from "next/navigation";
+import { useCustomSnackbar } from "@/lib/hooks/useSnackbar";
 
 let initialForm = {
   textData: "",
@@ -38,22 +39,10 @@ const submitInsightForm = async (form: FormProps): Promise<string> => {
   return data.data;
 };
 
-const FormRouter = ({ route, form, updateForm }: { route: FormStages; form: FormProps; updateForm: (arg0: any) => void }) => {
-  switch (route) {
-    case FormStages.INTRO:
-      return <FormIntro />;
-    case FormStages.DATA:
-      return <FormData updateForm={updateForm} form={form} />;
-    case FormStages.CONTEXT:
-      return <FormContext updateForm={updateForm} form={form} />;
-    default:
-      return <p>form router error kek</p>;
-  }
-};
-
 export default function CreateInsightsForm() {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const { toast } = useCustomSnackbar();
 
   // State
   const [form, setForm] = useState<FormProps>(initialForm);
@@ -68,6 +57,13 @@ export default function CreateInsightsForm() {
       queryClient.invalidateQueries(["all-views"]);
       router.push(`/view/${viewId}`);
     },
+    onError: (e: any) => {
+      toast.error("" + e.message, {
+        type: "error",
+        isLoading: false,
+        autoClose: 4000,
+      });
+    },
   });
 
   const handleFormChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -77,9 +73,18 @@ export default function CreateInsightsForm() {
     }));
   };
 
+  const handleAddFileForm = (data: any) => {
+    setForm((prevForm) => ({
+      ...prevForm,
+      fileData: data,
+    }));
+  };
+
   const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    await mutateAsync(form);
+    try {
+      e.preventDefault();
+      await mutateAsync(form);
+    } catch (e) {}
   };
 
   const changeStage = async (e: React.MouseEvent<HTMLButtonElement>, direction: "next" | "back") => {
@@ -115,12 +120,13 @@ export default function CreateInsightsForm() {
         {/* Form Progress Nav */}
         <FormProgress stage={currentStage} />
 
-        {/* Form Error */}
-        {error ? <p className="bg-red-500 text-white">{error.toString()}</p> : null}
-
         {/* Form Root */}
         <form onSubmit={handleSubmitForm} className="relative mx-auto flex h-auto w-full max-w-2xl flex-col items-end pb-20">
-          <FormComponent updateForm={handleFormChange} form={form} />
+          {currentStage == FormStages.DATA ? (
+            <FormComponent updateData={handleAddFileForm} updateForm={handleFormChange} form={form} />
+          ) : (
+            <FormComponent updateForm={handleFormChange} form={form} />
+          )}
           <FormNav showNav={showNav == undefined ? true : showNav} currentStage={currentStage} changeStage={changeStage} />
         </form>
       </section>

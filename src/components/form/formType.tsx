@@ -11,7 +11,7 @@ type ComponentProps = {
 
 export const FormTitle = ({ children, className }: ComponentProps) => {
   return (
-    <h1 className={cn("mb-2 w-full text-xl font-semibold capitalize text-l-text-main dark:text-d-text-main sm:text-2xl", className)}>{children}</h1>
+    <h1 className={cn("mb-2 w-full text-2xl font-semibold capitalize text-l-text-main dark:text-d-text-main sm:text-3xl", className)}>{children}</h1>
   );
 };
 
@@ -20,7 +20,7 @@ export const FormSubheading = ({ children, className }: ComponentProps) => {
 };
 
 export const FormText = ({ children, className }: ComponentProps) => {
-  return <p className={cn("mb-4 text-l-text-second dark:text-d-text-second", className)}>{children}</p>;
+  return <p className={cn("mb-6 text-lg font-light text-l-text-second dark:text-d-text-second", className)}>{children}</p>;
 };
 
 export const FormSpan = ({ children, className }: ComponentProps) => {

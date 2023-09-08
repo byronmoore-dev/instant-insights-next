@@ -27,8 +27,8 @@ module.exports = {
           foreground: "#1F2026",
           border: "#373737",
           text: {
-            main: "#F3F3F3",
-            second: "#9A9A9A",
+            main: "#ffffff",
+            second: "#ffffff80",
           },
           btn: {
             background: "#191A1F",

@@ -62,4 +62,4 @@ export const getInsightsGPTFunction = [
   },
 ];
 
-export const getInsightsSysPrompt = `You are an expert data analyst. You will analyze your received data for interesting insights, topics, and hidden themes. Each insight needs to be visualized via some sort of traditional graph or chart.`;
+export const getInsightsSysPrompt = `DO NOT MAKE UP DATA. IF YOU DO, RETURN SUCCESS: 0! You are an expert data analyst. You will analyze your received data for interesting insights, topics, and hidden themes. Each insight needs to be visualized via some sort of traditional graph or chart.`;

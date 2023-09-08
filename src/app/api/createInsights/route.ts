@@ -8,6 +8,7 @@ import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai";
 import { CreateInsightsOpenAiProps } from "@/types/general";
 import { getInsightsGPTFunction, getInsightsSysPrompt } from "./gptContstants";
 import { uploadStringToS3 } from "./uploadS3";
+import { FormProps } from "@/types/form";
 
 // export const runtime = "edge";
 
@@ -17,13 +18,20 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
+type RequestBody = FormProps;
+
+const decodeString = (encodedSt: string) => {
+  const base64EncodedString = encodedSt.split(",")[1];
+  return atob(base64EncodedString);
+};
+
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
-    const { textData, fileData, summary, purpose } = await req.json();
-    // Initial Message Prompt
-    let data = textData;
+    const { textData, fileData, summary, purpose }: RequestBody = await req.json();
 
     validateInput(textData, fileData, summary, purpose);
+    let data = fileData ? decodeString(fileData.data) : textData;
+    console.log("DATA: ", data);
 
     let { tokensUsed, openAiResponse } = await fetchChatCompletionFromOpenAI({ summary, purpose, data });
 
@@ -32,23 +40,26 @@ export async function POST(req: NextRequest, res: NextResponse) {
     let viewID = await saveToSupabase({ openai: openAiResponse, summary, purpose, fileName, fileURL, tokens: tokensUsed });
     return NextResponse.json({ data: viewID }, { status: 200 });
   } catch (error: any) {
-    console.log(error);
     console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500, statusText: error });
   }
 }
 
-function validateInput(textData: string, fileData: string, summary: string, purpose: string): void {
+function validateInput(textData: string, fileData: any, summary: string, purpose: string): void {
   if (!textData && !fileData) {
-    throw new Error("Please submit either a file or text.");
+    throw "Please submit either a file or text.";
+  }
+
+  if (textData && fileData) {
+    throw "Please select only 1 file or text data.";
   }
 
   if (!summary) {
-    throw new Error("Please describe your data.");
+    throw "Please describe your data.";
   }
 
   if (!purpose) {
-    throw new Error("Please write what you want to learn.");
+    throw "Please write what you want to learn.";
   }
 }
 

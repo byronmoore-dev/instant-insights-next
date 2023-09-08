@@ -18,7 +18,7 @@ const excludedPaths = ["/login", "/signup", "/reset", "/dashboard", "/profile"];
 
 function Sidebar() {
   const path = usePathname();
-  const [open, setOpen] = useLocalStorage<boolean>("sidebarOpen", false);
+  const [open, setOpen] = useLocalStorage<boolean>("sidebarOpen", true);
 
   const { data, error, isLoading } = useQuery<ViewType[]>({
     queryKey: ["all-views"],

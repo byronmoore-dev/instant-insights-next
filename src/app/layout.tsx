@@ -3,6 +3,7 @@ import "@/css/globals.css";
 import Sidebar from "@/components/sidebar";
 import { Noto_Sans, Open_Sans } from "next/font/google";
 import { ThemeProviders } from "@/components/providers/themeProvider";
+import { SnackbarProvider } from "@/lib/hooks/useSnackbar";
 
 const header = Noto_Sans({
   weight: ["200", "300", "400", "500", "600", "700"],
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-l-background dark:bg-d-background">
         <ThemeProviders>
           <QueryProvider>
+            <SnackbarProvider />
             <main className="flex min-h-screen w-full flex-row items-start overflow-hidden">
               <Sidebar />
               <div className="h-full w-full">{children}</div>
