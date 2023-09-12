@@ -108,7 +108,7 @@ function SidebarList() {
     return (
       <div className="px-6">
         <h6 className="mb-1 text-sm font-semibold text-white/50">Views</h6>
-        <div className={"relative flex w-full cursor-default items-center overflow-hidden overflow-y-scroll py-3 text-center text-sm text-white/80"}>
+        <div className={"relative flex w-full cursor-default items-center overflow-hidden py-3 text-center text-sm text-white/80"}>
           <p className="relative">You have no views yet. Click the 'New View' button to begin!</p>
         </div>
       </div>

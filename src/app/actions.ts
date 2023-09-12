@@ -26,8 +26,9 @@ export async function getAllViews(): Promise<AllViewsProps[]> {
     if (!views?.data) throw new Error("Error getting all views.");
 
     const sorted = views.data.sort((a, b) => b.updated_at - a.updated_at);
-    return sorted;
+    return sorted || [];
   } catch (error) {
+    console.error(error);
     throw error;
   }
 }
