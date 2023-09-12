@@ -31,7 +31,7 @@ const PieChartComponent: React.FC<PieChartComponentProps> = ({ data }) => {
   suppressRechartsWarnings();
 
   return (
-    <div className="w-full h-48 md:h-auto md:aspect-square" ref={containerRef}>
+    <div className="h-48 w-full md:aspect-square md:h-auto" ref={containerRef}>
       <ResponsiveContainer width={"100%"} height={"100%"} key={containerWidth}>
         <PieChart>
           <Pie activeIndex={0} data={data} outerRadius={interpolateOuterRadius(containerWidth)} fill="#8884d8" nameKey="label" dataKey="value">

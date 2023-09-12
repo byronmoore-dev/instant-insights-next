@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { FormStages } from "@/types/general";
+import { FormStages } from "@/types/form";
 import Image from "next/image";
 
 export default function FormProgress({ stage }: { stage: FormStages }) {

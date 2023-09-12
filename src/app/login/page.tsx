@@ -23,6 +23,15 @@ export default function Login() {
         </svg>
         Back
       </Link>
+      {/*
+      <form action="/auth/sign-in-with-google" method="post">
+        <button
+          type="submit"
+          className="flex items-center justify-center space-x-2 rounded bg-red-500 px-4 py-2 font-bold text-white shadow-md hover:bg-red-600"
+        >
+          <span>Sign in with Google</span>
+        </button>
+  </form>*/}
 
       <form className="text-foreground flex w-full flex-col justify-center space-y-6" action="/auth/sign-in" method="post">
         {/* Email Field */}

@@ -1,10 +1,10 @@
 "use server";
 
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import { getView } from "@/app/actions";
-import ViewDisplay from "./display";
+import ViewDisplay from "@/components/display";
+import { User } from "@supabase/supabase-js";
 
 // export const runtime = "edge";
 // export const preferredRegion = "home";
@@ -15,32 +15,25 @@ export interface ChatPageProps {
   };
 }
 
-const getUser = async (): Promise<any> => {
-  "use server";
+const getUser = async (): Promise<User | null> => {
   const supabase = createServerComponentClient({ cookies });
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
   return user;
 };
 
-export default async function ChatPage({ params }: ChatPageProps) {
+export default async function ViewPage({ params }: ChatPageProps) {
   const user = getUser();
 
   if (!user) {
-    redirect(`/sign-in?next=/chat/${params.id}`);
-  }
-
-  const chat = await getView(params.id);
-
-  if (!chat) {
-    console.log("sad day, no chat");
-    return <p>loading mfer</p>;
+    redirect(`/sign-in`);
   }
 
   return (
-    <div className="mx-auto w-[90%] sm:w-[80%] pt-28 max-w-7xl">
-      <ViewDisplay id={params.id} />
+    <div className="mx-auto w-[90%] max-w-7xl pt-28 sm:w-[80%]">
+      <ViewDisplay viewID={params.id} />
     </div>
   );
 }

@@ -4,13 +4,11 @@ import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { Database } from "../../types/supabase";
 import { PostgrestMaybeSingleResponse } from "@supabase/supabase-js";
+import { removeObjectFromS3 } from "@/lib/removeFromS3";
+import { AllViewsProps, InsightProps, ViewProps } from "@/types/general";
 
-type ViewRow = Database["public"]["Tables"]["view"]["Row"];
-type MessageRow = Database["public"]["Tables"]["message"]["Row"];
-
-export async function getAllViews(): Promise<ViewRow[]> {
+export async function getAllViews(): Promise<AllViewsProps[]> {
   const supabase = createServerActionClient({ cookies });
-  console.log("Calling get all views here");
 
   const {
     data: { user },
@@ -19,66 +17,74 @@ export async function getAllViews(): Promise<ViewRow[]> {
   try {
     if (!user) throw new Error("No valid user logged in");
 
-    const views: PostgrestMaybeSingleResponse<ViewRow[]> = await supabase.from("view").select("*").eq("user_id", user.id);
-    return views?.data || [];
+    const views: PostgrestMaybeSingleResponse<any[]> = await supabase
+      .from("view")
+      .select("id, title, updated_at")
+      .eq("user_id", user.id)
+      .order("updated_at", { ascending: false });
+
+    if (!views?.data) throw new Error("Error getting all views.");
+
+    const sorted = views.data.sort((a, b) => b.updated_at - a.updated_at);
+    return sorted;
   } catch (error) {
     throw error;
   }
 }
 
-/*
-    Get one view
-*/
-export async function getView(view_id: string): Promise<PostgrestMaybeSingleResponse<ViewRow> | null> {
+export async function getInsights(viewID: string): Promise<InsightProps[]> {
   const supabase = createServerActionClient({ cookies });
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  try {
-    if (!user) throw new Error("");
+  if (!user) throw new Error("User is not authenticated.");
 
-    // Get the convo root
-    const view: PostgrestMaybeSingleResponse<ViewRow> = await supabase.from("view").select("*").eq("id", view_id).eq("user_id", user.id).single();
+  const res: PostgrestMaybeSingleResponse<InsightProps[]> = await supabase.from("insights").select("*").eq("view_id", viewID);
+  if (!res?.data) throw new Error("Error getting insights table.");
+  return res?.data;
+}
 
-    if (!view) throw new Error("Error getting view table.");
+/*
+    Get one view
+*/
+export async function getView(view_id: string): Promise<ViewProps> {
+  const supabase = createServerActionClient({ cookies });
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-    // Get all messages from with the convo id
-    const messages: PostgrestMaybeSingleResponse<MessageRow[]> = await supabase
-      .from("message")
-      .select("*")
-      .eq("user_id", user.id)
-      .eq("view_id", view_id);
+  if (!user) throw new Error("User is not authenticated.");
 
-    if (!messages) throw new Error("Error getting messages.");
+  const res: PostgrestMaybeSingleResponse<ViewProps> = await supabase.from("view").select("*").eq("id", view_id).eq("user_id", user.id).single();
+  if (!res?.data) throw new Error("Error getting view table.");
 
-    return view;
-  } catch (error) {
-    return null;
-  }
+  return res.data;
 }
 
 /*
     Remove view
 */
 export async function removeView(id: string) {
-  const supabase = createServerActionClient({ cookies });
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   try {
-    if (!user) throw new Error("");
-    let res1 = await supabase.from("view").select("*").eq("id", id).eq("user_id", user.id);
-    console.log("1", res1);
-    const response = await supabase.from("view").delete().eq("id", id).eq("user_id", user.id);
-    console.log("RES: ", response);
+    const supabase = createServerActionClient({ cookies });
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-    let res2 = await supabase.from("view").select("*").eq("id", id).eq("user_id", user.id);
-    console.log("2:", res2);
+    if (!user) throw new Error("User not authenticated.");
+
+    const { data: selectData, error: selectError } = await supabase.from("view").select("input_data_name").eq("id", id).single();
+    if (selectError) throw selectError;
+
+    const { data: insightData, error: insightError } = await supabase.from("insights").delete().eq("view_id", id).eq("user_id", user.id);
+    if (insightError) throw insightError;
+
+    await removeObjectFromS3(selectData?.input_data_name);
+
+    const response = await supabase.from("view").delete().eq("id", id).eq("user_id", user.id);
     return response;
   } catch (e) {
-    console.log("error: ", e);
+    console.error(e);
   }
 }
