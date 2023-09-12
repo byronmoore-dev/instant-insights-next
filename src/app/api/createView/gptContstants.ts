@@ -2,7 +2,7 @@ import { GPTChartTypes } from "@/types/general";
 
 export const getInsightsGPTFunction = [
   {
-    name: "getInsights",
+    name: "getViewInsights",
     description: "I need a list of interesting insights and ideas from this data.",
     parameters: {
       type: "object",

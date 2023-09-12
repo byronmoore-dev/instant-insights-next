@@ -25,7 +25,7 @@ const FORM_ROUTES = {
 };
 
 const submitInsightForm = async (form: FormProps): Promise<string> => {
-  const response = await fetch("/api/createInsights", {
+  const response = await fetch("/api/createView", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

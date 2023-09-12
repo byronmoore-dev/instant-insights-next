@@ -16,7 +16,7 @@ export default function ViewDisplay({ viewID }: { viewID: string }) {
   if (viewQuery.status === "loading") return <p className="text-5xl text-white">loading</p>;
 
   return (
-    <motion.div initial={{}} className="w-full">
+    <motion.div className="w-full">
       <section className="mb-16 mr-auto flex items-center">
         <div className="max-w-3xl flex-grow pl-4">
           <h1 className="text-color-main mb-1 w-full  font-header text-xl font-semibold tracking-wide text-l-text-main dark:text-d-text-main sm:text-2xl">

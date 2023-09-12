@@ -14,6 +14,7 @@ export interface Database {
           base_insight: string | null
           chart_type: string | null
           context: string | null
+          created_at: number | null
           data: Json | null
           id: string
           title: string | null
@@ -24,6 +25,7 @@ export interface Database {
           base_insight?: string | null
           chart_type?: string | null
           context?: string | null
+          created_at?: number | null
           data?: Json | null
           id?: string
           title?: string | null
@@ -34,6 +36,7 @@ export interface Database {
           base_insight?: string | null
           chart_type?: string | null
           context?: string | null
+          created_at?: number | null
           data?: Json | null
           id?: string
           title?: string | null
@@ -95,8 +98,46 @@ export interface Database {
           }
         ]
       }
+      usage: {
+        Row: {
+          action: string | null
+          completion_tokens: number | null
+          id: string
+          prompt_tokens: number | null
+          total_tokens: number | null
+          used_at: number | null
+          user_id: string | null
+        }
+        Insert: {
+          action?: string | null
+          completion_tokens?: number | null
+          id?: string
+          prompt_tokens?: number | null
+          total_tokens?: number | null
+          used_at?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string | null
+          completion_tokens?: number | null
+          id?: string
+          prompt_tokens?: number | null
+          total_tokens?: number | null
+          used_at?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "usage_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       view: {
         Row: {
+          created_at: number | null
           id: string
           input_data_name: string | null
           input_data_url: string | null
@@ -105,9 +146,11 @@ export interface Database {
           insights: string[] | null
           subtitle: string | null
           title: string | null
+          updated_at: number | null
           user_id: string | null
         }
         Insert: {
+          created_at?: number | null
           id?: string
           input_data_name?: string | null
           input_data_url?: string | null
@@ -116,9 +159,11 @@ export interface Database {
           insights?: string[] | null
           subtitle?: string | null
           title?: string | null
+          updated_at?: number | null
           user_id?: string | null
         }
         Update: {
+          created_at?: number | null
           id?: string
           input_data_name?: string | null
           input_data_url?: string | null
@@ -127,6 +172,7 @@ export interface Database {
           insights?: string[] | null
           subtitle?: string | null
           title?: string | null
+          updated_at?: number | null
           user_id?: string | null
         }
         Relationships: [

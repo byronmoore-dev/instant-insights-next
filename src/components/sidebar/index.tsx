@@ -1,35 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-
-import { Database } from "@/types/supabase";
-import { AddIcon, DashboardIcon, SidebarIcon } from "@/lib/assets/icons";
-import AuthDisplay from "./authDisplay";
+import { AddIcon, SidebarIcon } from "@/lib/assets/icons";
 import useLocalStorage from "@/lib/hooks/useLocalStorage";
 import SidebarList from "./sidebarItems";
-import { getAllViews } from "@/app/actions";
-import ThemeSwitch from "../themeSwitch";
+import AccountManagement from "./accountManagement";
 import { usePathname } from "next/navigation";
-
-type ViewType = Database["public"]["Tables"]["view"]["Row"];
 const excludedPaths = ["/login", "/signup", "/reset", "/dashboard", "/profile"];
 
 function Sidebar() {
-  const path = usePathname();
   const [open, setOpen] = useLocalStorage<boolean>("sidebarOpen", true);
+  const path = usePathname();
 
-  const { data, error, isLoading } = useQuery<ViewType[]>({
-    queryKey: ["all-views"],
-    queryFn: () => getAllViews(),
-    refetchOnWindowFocus: false,
-    enabled: !excludedPaths.some((excludedPath) => path.includes(excludedPath)),
-  });
-
-  if (isLoading) return null;
-  if (!data) return null;
-  if (error) return null;
+  if (excludedPaths.some((excludedPath) => path.includes(excludedPath))) return null;
 
   return (
     <>
@@ -67,9 +51,9 @@ function Sidebar() {
             exit={{ width: 0 }}
             className="fixed z-30 h-screen overflow-hidden border-[1px] border-l-border bg-l-background dark:border-d-border dark:bg-d-background"
           >
-            <section className="flex h-full w-[calc(350px-64px)] flex-col overflow-x-hidden p-6">
+            <section className="flex h-full w-[calc(350px-64px)] flex-col overflow-x-hidden">
               {/* Upper Actions */}
-              <div className="mb-16 flex flex-row">
+              <div className="mb-8 flex flex-row p-6">
                 <Link
                   href={`/`}
                   className=" flex w-full flex-row items-center rounded border-[1px] border-l-border pl-3 text-base font-medium text-l-text-main duration-200 hover:bg-l-foreground dark:border-d-border dark:text-d-text-main hover:dark:bg-d-foreground"
@@ -84,27 +68,11 @@ function Sidebar() {
                 </button>
               </div>
 
-              {/* Dashboard */}
-              {/* 
-              <Link
-                href={`/`}
-                className="hover:bg-foreground text-l-main dark:text-d-main group relative flex w-full items-center overflow-hidden rounded-md px-2 py-3 duration-75"
-              >
-                <DashboardIcon className="mr-2 stroke-l-text-main dark:stroke-d-text-main" />
-                Dashboard
-              </Link>
-              <div className="mb-6 mt-4 h-[1px] w-full rounded bg-l-border dark:bg-d-border" />
-              */}
-
               {/* Views */}
-              <SidebarList data={data} />
-              <div className="bg-border mb-2 mt-auto h-[1px] w-full rounded" />
+              <SidebarList />
 
-              {/* Auth */}
-              <div className="mb-2">
-                <ThemeSwitch />
-              </div>
-              <AuthDisplay />
+              {/* Account Management */}
+              <AccountManagement />
             </section>
           </motion.aside>
         ) : null}

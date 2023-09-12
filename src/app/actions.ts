@@ -5,9 +5,9 @@ import { cookies } from "next/headers";
 import { Database } from "../../types/supabase";
 import { PostgrestMaybeSingleResponse } from "@supabase/supabase-js";
 import { removeObjectFromS3 } from "@/lib/removeFromS3";
-import { InsightProps, ViewProps } from "@/types/general";
+import { AllViewsProps, InsightProps, ViewProps } from "@/types/general";
 
-export async function getAllViews(): Promise<ViewProps[]> {
+export async function getAllViews(): Promise<AllViewsProps[]> {
   const supabase = createServerActionClient({ cookies });
 
   const {
@@ -17,8 +17,16 @@ export async function getAllViews(): Promise<ViewProps[]> {
   try {
     if (!user) throw new Error("No valid user logged in");
 
-    const views: PostgrestMaybeSingleResponse<ViewProps[]> = await supabase.from("view").select("*").eq("user_id", user.id);
-    return views?.data || [];
+    const views: PostgrestMaybeSingleResponse<any[]> = await supabase
+      .from("view")
+      .select("id, title, updated_at")
+      .eq("user_id", user.id)
+      .order("updated_at", { ascending: false });
+
+    if (!views?.data) throw new Error("Error getting all views.");
+
+    const sorted = views.data.sort((a, b) => b.updated_at - a.updated_at);
+    return sorted;
   } catch (error) {
     throw error;
   }

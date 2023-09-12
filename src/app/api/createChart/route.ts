@@ -5,14 +5,19 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai";
-import { ChartType, CreateChartOpenAiProps, PotentialInsightProps, ViewProps } from "@/types/general";
+import { ChartType, CreateChartOpenAiProps, OpenAiUsageProps, PotentialInsightProps, ViewProps } from "@/types/general";
 import { getChartGPTFunction, getChartSysPrompt } from "./gptContstants";
 import { fetchFileFromS3 } from "./fetchS3";
 
 // export const runtime = "edge";
 
 const MODEL_NAME = "gpt-3.5-turbo-16k";
-const TEMPERATURE = 0.8;
+const TEMPERATURE = 0.5;
+const openai = new OpenAIApi(
+  new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+  })
+);
 
 type GPTCompletionProp = {
   insight: string;
@@ -25,14 +30,14 @@ type RequestBody = {
   viewData: ViewProps;
 };
 
-type SaveToSupabaseProps = { openai: any; viewID: string; tokens: any; baseInsight: PotentialInsightProps };
+type SaveToSupabaseProps = { openai: any; viewID: string; tokens: OpenAiUsageProps; baseInsight: PotentialInsightProps };
 
-const openai = new OpenAIApi(
-  new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-  })
-);
 
+/*
+  ***************************************************
+  Handles HTTP POST requests.
+  ***************************************************
+*/
 export async function POST(req: Request, res: NextResponse) {
   try {
     const json: RequestBody = await req.json();
@@ -60,6 +65,11 @@ export async function POST(req: Request, res: NextResponse) {
   }
 }
 
+/*
+  ***************************************************
+  Fetches chat completion from OpenAI based on provided data.
+  ***************************************************
+*/
 const fetchChatCompletionFromOpenAI = async ({ insight, chartType, data }: GPTCompletionProp) => {
   const gptFunction = getChartGPTFunction.find((chart) => chart.name === chartType);
 
@@ -74,7 +84,7 @@ const fetchChatCompletionFromOpenAI = async ({ insight, chartType, data }: GPTCo
     function_call: { name: chartType },
   });
 
-  const tokensUsed = openai_res_insights?.data?.usage?.total_tokens;
+  const tokensUsed: OpenAiUsageProps = openai_res_insights?.data?.usage as OpenAiUsageProps;
   const openaiLastMessage = openai_res_insights?.data?.choices[0]?.message;
 
   if (!openaiLastMessage?.function_call?.arguments) {
@@ -89,8 +99,15 @@ const fetchChatCompletionFromOpenAI = async ({ insight, chartType, data }: GPTCo
   };
 };
 
+/*
+  ***************************************************
+  Saves data to Supabase.
+  ***************************************************
+*/
 const saveToSupabase = async ({ openai, viewID, tokens, baseInsight }: SaveToSupabaseProps) => {
   const supabase = createRouteHandlerClient({ cookies });
+  const curTime = new Date();
+
   const sqlData = {
     view_id: viewID,
     title: openai.title,
@@ -98,14 +115,34 @@ const saveToSupabase = async ({ openai, viewID, tokens, baseInsight }: SaveToSup
     data: openai.data,
     chart_type: baseInsight.chartType,
     base_insight: baseInsight.insight,
+    created_at: curTime.getTime(),
   };
 
-  const supabaseRes = await supabase.from("insights").insert(sqlData);
-  if (supabaseRes.error) {
-    throw new Error(supabaseRes.error.message);
+  const insightRes = await supabase.from("insights").insert(sqlData);
+
+  const usageData = {
+    prompt_tokens: tokens.prompt_tokens,
+    completion_tokens: tokens.completion_tokens,
+    total_tokens: tokens.total_tokens,
+    used_at: curTime.getTime(),
+    action: "insight",
+  };
+  const usageRes = await supabase.from("usage").insert(usageData);
+
+  if (insightRes.error) {
+    throw new Error(insightRes.error.message);
+  }
+
+  if (usageRes.error) {
+    throw new Error(usageRes.error.message);
   }
 };
 
+/*
+  ***************************************************
+  Formats chat messages for OpenAI.
+  ***************************************************
+*/
 const getMessageFormat = (insight: string, chartType: string, data: string): ChatCompletionRequestMessage[] => {
   return [
     {
