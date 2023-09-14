@@ -55,6 +55,7 @@ export default function CreateInsightsForm() {
     onSuccess: (viewId: string) => {
       setSubmitted(true);
       queryClient.invalidateQueries(["all-views"]);
+      queryClient.invalidateQueries(["user-token-usage"]);
       router.push(`/view/${viewId}`);
     },
     onError: (e: any) => {

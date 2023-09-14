@@ -3,6 +3,7 @@ import { Database } from "@/types/supabase";
 export type ViewProps = Database["public"]["Tables"]["view"]["Row"];
 export type InsightProps = Database["public"]["Tables"]["insights"]["Row"];
 export type UsageProps = Database["public"]["Tables"]["usage"]["Row"];
+export type AccountProps = Database["public"]["Tables"]["account"]["Row"];
 
 export type ChartType = "lineChart" | "pieChart" | "doughnutChart" | "radarChart" | "barChart";
 export const GPTChartTypes = ["lineChart", "pieChart", "doughtnutChart", "radarChart", "barChart"];

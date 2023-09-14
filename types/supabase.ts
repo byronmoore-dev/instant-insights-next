@@ -9,6 +9,34 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      account: {
+        Row: {
+          id: string
+          total_actions: number | null
+          total_open_ai_tokens_used: number | null
+          user_id: string | null
+        }
+        Insert: {
+          id?: string
+          total_actions?: number | null
+          total_open_ai_tokens_used?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          id?: string
+          total_actions?: number | null
+          total_open_ai_tokens_used?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "account_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       insights: {
         Row: {
           base_insight: string | null

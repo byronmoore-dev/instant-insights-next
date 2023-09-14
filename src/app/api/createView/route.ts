@@ -1,15 +1,14 @@
 "use server";
 
 import { NextRequest, NextResponse } from "next/server";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
 
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai";
-import { CreateViewOpenAiProps, OpenAiUsageProps, SupabaseSaveInsightProps } from "@/types/general";
+import { CreateViewOpenAiProps, OpenAiUsageProps } from "@/types/general";
 import { getInsightsGPTFunction, getInsightsSysPrompt } from "./gptContstants";
 import { uploadStringToS3 } from "./uploadS3";
 import { FormProps } from "@/types/form";
 import { countChatTokens } from "@/lib/tokenCounter";
+import { saveToSupabase } from "./supabase";
 
 // export const runtime = "edge";
 
@@ -102,44 +101,6 @@ async function fetchChatCompletionFromOpenAI({
   console.log("TOKENS USED: ", tokensUsed);
   return { tokensUsed, openAiResponse: openAiFormattedResponse };
 }
-
-/*
-  ***************************************************
-  Saves data to Supabase including insights and usage.
-  ***************************************************
-*/
-const saveToSupabase = async ({ openai, summary, purpose, fileName, fileURL, tokens }: SupabaseSaveInsightProps) => {
-  try {
-    const supabase = createRouteHandlerClient({ cookies });
-    const curTime = new Date();
-    const viewData = {
-      input_summary: summary,
-      input_purpose: purpose,
-      input_data_url: fileURL,
-      input_data_name: fileName,
-      title: openai.title,
-      subtitle: openai.subtitle,
-      insights: openai.insights,
-      updated_at: curTime.getTime(),
-      created_at: curTime.getTime(),
-    };
-    const viewRes = await supabase.from("view").insert(viewData).select("id").limit(1);
-
-    const usageData = {
-      prompt_tokens: tokens.prompt_tokens,
-      completion_tokens: tokens.completion_tokens,
-      total_tokens: tokens.total_tokens,
-      used_at: curTime.getTime(),
-      action: "view",
-    };
-    const usageRes = await supabase.from("usage").insert(usageData);
-    // if (usageRes.error) throw new Error(usageRes?.statusText);
-
-    return viewRes?.data?.[0].id;
-  } catch (e: any) {
-    throw e;
-  }
-};
 
 /*
   *************************

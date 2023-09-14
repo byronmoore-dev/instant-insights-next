@@ -1,13 +1,12 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
 
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai";
 import { ChartType, CreateChartOpenAiProps, OpenAiUsageProps, PotentialInsightProps, ViewProps } from "@/types/general";
 import { getChartGPTFunction, getChartSysPrompt } from "./gptContstants";
 import { fetchFileFromS3 } from "./fetchS3";
+import { saveToSupabase } from "./supabase";
 
 // export const runtime = "edge";
 
@@ -29,9 +28,6 @@ type RequestBody = {
   item: PotentialInsightProps;
   viewData: ViewProps;
 };
-
-type SaveToSupabaseProps = { openai: any; viewID: string; tokens: OpenAiUsageProps; baseInsight: PotentialInsightProps };
-
 
 /*
   ***************************************************
@@ -97,45 +93,6 @@ const fetchChatCompletionFromOpenAI = async ({ insight, chartType, data }: GPTCo
     tokensUsed,
     openAiResponse: openAiParsedResponse,
   };
-};
-
-/*
-  ***************************************************
-  Saves data to Supabase.
-  ***************************************************
-*/
-const saveToSupabase = async ({ openai, viewID, tokens, baseInsight }: SaveToSupabaseProps) => {
-  const supabase = createRouteHandlerClient({ cookies });
-  const curTime = new Date();
-
-  const sqlData = {
-    view_id: viewID,
-    title: openai.title,
-    context: openai.context,
-    data: openai.data,
-    chart_type: baseInsight.chartType,
-    base_insight: baseInsight.insight,
-    created_at: curTime.getTime(),
-  };
-
-  const insightRes = await supabase.from("insights").insert(sqlData);
-
-  const usageData = {
-    prompt_tokens: tokens.prompt_tokens,
-    completion_tokens: tokens.completion_tokens,
-    total_tokens: tokens.total_tokens,
-    used_at: curTime.getTime(),
-    action: "insight",
-  };
-  const usageRes = await supabase.from("usage").insert(usageData);
-
-  if (insightRes.error) {
-    throw new Error(insightRes.error.message);
-  }
-
-  if (usageRes.error) {
-    throw new Error(usageRes.error.message);
-  }
 };
 
 /*

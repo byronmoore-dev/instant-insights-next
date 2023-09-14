@@ -51,6 +51,7 @@ export default function PotentialInsights({ pi, viewID }: { pi: PotentialInsight
     mutationFn: createChartFromInsight,
     onSuccess: () => {
       queryClient.invalidateQueries(["get-insights", viewID]);
+      queryClient.invalidateQueries(["user-token-usage"]);
     },
   });
 
