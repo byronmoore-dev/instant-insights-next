@@ -15,7 +15,7 @@ const ThemeSwitch = () => {
   }
 
   return (
-    <button aria-label="Toggle Dark Mode" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+    <button aria-label="Toggle Dark Mode" onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="bg-l-foreground dark:bg-d-foreground mb-4 flex items-center justify-center py-2 rounded-md">
       <svg viewBox="0 0 20 20" fill="currentColor" className="h-6 w-6 text-gray-900 dark:text-gray-100">
         {mounted && theme === "dark" ? (
           <path

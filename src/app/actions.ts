@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { Database } from "../../types/supabase";
 import { PostgrestMaybeSingleResponse } from "@supabase/supabase-js";
 import { removeObjectFromS3 } from "@/lib/removeFromS3";
-import { AllViewsProps, InsightProps, ViewProps } from "@/types/general";
+import { AccountProps, AllViewsProps, InsightProps, ViewProps } from "@/types/general";
 
 export async function getAllViews(): Promise<AllViewsProps[]> {
   const supabase = createServerActionClient({ cookies });
@@ -27,6 +27,29 @@ export async function getAllViews(): Promise<AllViewsProps[]> {
 
     const sorted = views.data.sort((a, b) => b.updated_at - a.updated_at);
     return sorted || [];
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function getCurrentTokensUsed(): Promise<number> {
+  const supabase = createServerActionClient({ cookies });
+  console.log("getting tokens");
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  try {
+    if (!user) throw new Error("No valid user logged in");
+
+    const account: PostgrestMaybeSingleResponse<AccountProps> = await supabase.from("account").select("*").eq("user_id", user.id).single();
+
+    if (!account?.data) throw new Error("Error getting account data.");
+
+    console.log("USAGE: ", account);
+
+    return account?.data?.total_open_ai_tokens_used || 0;
   } catch (error) {
     console.error(error);
     throw error;
