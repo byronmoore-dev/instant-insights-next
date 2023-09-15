@@ -31,7 +31,6 @@ const PiTile = ({ item }: { item: PotentialInsightProps }) => {
     <motion.div className="absolute left-0 top-0 h-full w-full rounded-xl border-[1px] border-d-border">
       <h6 className="pointer-events-none absolute left-0 top-0 z-10 h-full w-full p-6 font-light text-l-text-second dark:text-d-text-second sm:text-base sm:leading-snug">
         {item?.insight}
-        {item?.chartType}
       </h6>
       <motion.div
         className="absolute left-0 top-0 z-0 h-full w-full rounded-xl border-[1.5px] border-d-border bg-d-foreground opacity-0"
@@ -71,7 +70,6 @@ export default function PotentialInsights({ pi, viewID }: { pi: PotentialInsight
             >
               <h6 className="h-auto w-full p-6 font-light opacity-0 sm:text-base sm:leading-snug">
                 {item?.insight}
-                {item?.chartType}
               </h6>
               <PiTile item={item} />
             </motion.button>
